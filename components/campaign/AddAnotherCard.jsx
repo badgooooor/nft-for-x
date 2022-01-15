@@ -8,11 +8,12 @@ const AddAnotherCard = ({ src, name }) => {
         <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
           <Image
             className="m-2 animate-pulse"
-            width={100}
-            height={100}
+            width={64}
+            height={64}
             src="/plus.png"
             alt="add new"
           />
+          <div>Add another option</div>
         </motion.button>
       </div>
     </div>
