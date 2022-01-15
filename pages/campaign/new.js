@@ -8,7 +8,6 @@ const NewCampaignPage = () => {
   const [collectionAddr, setCollectionAddr] = useState("");
   return (
     <div>
-      <NavBar />
       <div className="flex flex-col max-w-xl m-10 space-y-6">
         <div>
           <label

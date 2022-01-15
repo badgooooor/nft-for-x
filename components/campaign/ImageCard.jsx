@@ -12,13 +12,13 @@ const ImageCard = ({ src, name }) => {
       </div>
       <div className="px-6 pt-4 pb-2">
         <span className="inline-block px-3 py-1 mb-2 mr-2 text-sm font-semibold text-black bg-[#feff79] rounded-full">
-          #photography
+          #fashion
         </span>
         <span className="inline-block px-3 py-1 mb-2 mr-2 text-sm font-semibold text-black bg-[#feff79] rounded-full">
-          #travel
+          #lifestyle
         </span>
         <span className="inline-block px-3 py-1 mb-2 mr-2 text-sm font-semibold text-black bg-[#feff79] rounded-full">
-          #winter
+          #nft
         </span>
       </div>
     </div>
