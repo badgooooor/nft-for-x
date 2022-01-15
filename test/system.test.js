@@ -13,7 +13,11 @@ describe("NFTForXFactory", function () {
     const nftForXFactory = await NFTForXFactory.deploy();
     await nftForXFactory.deployed();
 
-    await nftForXFactory.createCampaign(alice.address, nftCollection.address, 20);
+    await nftForXFactory.createCampaign(
+      alice.address,
+      nftCollection.address,
+      20
+    );
     expect(await nftForXFactory.numberOfCampaigns()).to.equal(1);
 
     const createdCampaignAddr = await nftForXFactory.getCampaign(0);
@@ -34,7 +38,11 @@ describe("NFTForX", function () {
 
   it("Should be created with all supplied parameter from constructor", async function () {
     const NFTForX = await ethers.getContractFactory("NFTForX");
-    const nftForX = await NFTForX.deploy(alice.address, nftCollection.address, 20);
+    const nftForX = await NFTForX.deploy(
+      alice.address,
+      nftCollection.address,
+      20
+    );
     await nftForX.deployed();
 
     expect(await nftForX.owner()).to.equal(alice.address);
@@ -87,7 +95,9 @@ describe("NFTForX", function () {
 
     // This should fail.
     await mockNFT.connect(alice).approve(nftForX.address, 1);
-    await expect(nftForX.redeem(1, 0)).to.be.revertedWith("Caller exceed redeem limit.");
+    await expect(nftForX.redeem(1, 0)).to.be.revertedWith(
+      "Caller exceed redeem limit."
+    );
   });
 
   it("Should count of user’s redeemed item", async function () {
@@ -115,6 +125,7 @@ describe("NFTForX", function () {
     }
 
     expect(await nftForX.userRedeemCount(alice.address)).to.equal(3);
+    expect(await nftForX.totalRedeemCount()).to.equal(3);
   });
 
   it("Should get user’s redeemed token and option", async function () {
@@ -145,7 +156,9 @@ describe("NFTForX", function () {
     const userRedeemed = await nftForX.getUserRedeem(alice.address);
     // Check NFT redeem
     for (let i = 0; i < 3; i++) {
-      expect(await nftForX.redeemFor(userRedeemed[i].toString())).to.equal(i + 1);
+      expect(await nftForX.redeemFor(userRedeemed[i].toString())).to.equal(
+        i + 1
+      );
     }
   });
 });
