@@ -2,8 +2,8 @@ import MyCampaignTable from "../../components/campaign/MyCampaignTable";
 
 const MyCampaignPage = () => {
   return (
-    <div className="m-14">
-      <p className="pb-6 text-xl font-bold">My Campaign</p>
+    <div>
+      <div className="font-bold text-2xl mb-2">My campaigns</div>
       <MyCampaignTable />
     </div>
   );

@@ -12,7 +12,14 @@ const NewCampaignPage = () => {
 
   return (
     <div>
-      <div className="flex flex-col max-w-xl m-10 space-y-6">
+      <div className="font-bold text-2xl mb-2">Create new campaign</div>
+
+      <div className="w-full bg-white rounded-md flex flex-col p-4 mb-4 shadow-lg">
+        <div className="font-bold text-xl mb-2">General</div>
+        <div className="font-light text-md mb-2">
+          Start with some information
+        </div>
+
         <div>
           <label
             htmlFor="Campaign Name"
@@ -44,17 +51,47 @@ const NewCampaignPage = () => {
           />
         </div>
       </div>
-      <div className="flex flex-col m-12">
-        <p className="mb-4 text-xl">Options</p>
-        <div className="grid max-w-6xl grid-cols-4 space-x-6">
-          <ImageCard src="/collection/tshirt.jpg" name="T Shirt" />
-          <ImageCard src="/collection/hat.jpg" name="Hat" />
-          <ImageCard src="/collection/jacket.jpg" name="Jacket" />
-          <AddAnotherCard />
+
+      <div className="w-full bg-white rounded-md flex flex-col p-4 mb-4 shadow-lg">
+        <div className="flex justify-between items-center">
+          <div>
+            <div className="font-bold text-xl">Redeemable Item Options</div>
+            <div className="font-light text-md mb-2">
+              Add options for redeemer to select
+            </div>
+          </div>
+          <div>
+            <button className="ease-in duration-300 bg-dark-slate-blue hover:bg-white text-white hover:text-dark-slate-blue border-2 border-dark-slate-blue rounded-md px-8 py-2">
+              <div className="text-xs">Add another option</div>
+            </button>
+          </div>
+        </div>
+
+        <div className="grid sm:grid-cols-4 grid-cols-2 gap-4">
+          <ImageCard
+            src="/collection/tshirt.jpg"
+            name="T Shirt"
+            description={"Shirt engraved with awesomeness"}
+          />
+          <ImageCard
+            src="/collection/hat.jpg"
+            name="Hat"
+            description={"Hat showing how sultan you are"}
+          />
+          <ImageCard
+            src="/collection/jacket.jpg"
+            name="Jacket"
+            description={"Jacket that make you drip like rockstar"}
+          />
         </div>
       </div>
-      <div className="flex flex-col max-w-2xl m-12">
-        <p className="mb-4 text-xl">Max Redeemable</p>
+      <div className="w-full bg-white rounded-md flex flex-col p-4 mb-4 shadow-lg">
+        <div>
+          <div className="font-bold text-xl">Redeemable Item Amount</div>
+          <div className="font-light text-md mb-2">
+            Set available amount of items
+          </div>
+        </div>
         <MaxRedeemableTable />
       </div>
     </div>

@@ -2,6 +2,7 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { useMoralis } from 'react-moralis';
 
+import NFTRedeemCard from '../components/campaign/NFTRedeemCard';
 import OptionModal from '../components/Modal/OptionModal';
 import MockNFT from '../src/artifacts/contracts/mock/MockNFT.sol/MockNFT.json';
 import NFTForX from '../src/artifacts/contracts/NFTForX.sol/NFTForX.json';
@@ -52,8 +53,9 @@ function HistoryContainer({ children }) {
   return <div className='grid grid-cols-4 gap-4 mx-8'>{children}</div>;
 }
 
-export default function Home() {
+const Home = () => {
   const { account, isAuthenticated, Moralis, isWeb3Enabled } = useMoralis();
+
   const [userNFTs, setUserNFTs] = useState([]);
   const [historyTransactions, setHistoryTransactions] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -161,46 +163,33 @@ export default function Home() {
 
   return (
     <div>
-      <Head>
-        <title>NFT for X</title>
-        <meta name='description' content='Best NFT Hack Application' />
-        <link rel='icon' href='/favicon.ico' />
-      </Head>
+      <OptionModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        tokenId={selectedTokenId}
+        redeem={redeem}
+      />
 
-      <div className='p-16'>
-        <OptionModal
-          showModal={showModal}
-          setShowModal={setShowModal}
-          tokenId={selectedTokenId}
-          redeem={redeem}
-        />
+      <div className='mb-4'>
+        <div className='font-bold text-2xl mb-2'>Choose token to redeem</div>
 
-        <div className='px-8 py-4 pt-8'>
-          <div className='font-bold text-2xl mb-2'>Your Redeemable NFTs</div>
-        </div>
-
-        <RedeemableContainer>
+        <div className='grid sm:grid-cols-4 grid-cols-2 gap-4'>
           {userNFTs.map(({ tokenId, image }) => (
-            <RedeemableItem
-              key={tokenId}
-              tokenId={tokenId}
-              openRedeem={openRedeem}
-              imgSrc={image}
-            />
+            <NFTRedeemCard key={tokenId} tokenId={tokenId} openRedeem={openRedeem} imgSrc={image} />
           ))}
-        </RedeemableContainer>
-
-        <div className='px-8 py-4 pt-8'>
-          <div className='font-bold text-2xl mb-2'>Transaction History</div>
         </div>
-        <HistoryContainer>
+      </div>
+
+      <div className='mb-4'>
+        <div className='font-bold text-2xl mb-2'>Historical transactions</div>
+        <div className='grid sm:grid-cols-4 grid-cols-2 gap-4'>
           {historyTransactions.map((tokenId) => (
             <HistoryItem key={tokenId} tokenId={tokenId} />
           ))}
-        </HistoryContainer>
-
-        <div className='mb-8'></div>
+        </div>
       </div>
     </div>
   );
-}
+};
+
+export default Home;
