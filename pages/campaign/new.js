@@ -1,4 +1,5 @@
 import { useState } from "react";
+import AddAnotherCard from "../../components/campaign/AddAnotherCard";
 import ImageCard from "../../components/campaign/ImageCard";
 import MaxRedeemableTable from "../../components/campaign/MaxRedeemableTable";
 import NavBar from "../../components/common/NavBar";
@@ -46,7 +47,7 @@ const NewCampaignPage = () => {
           <ImageCard src="/collection/tshirt.jpg" name="T Shirt" />
           <ImageCard src="/collection/hat.jpg" name="Hat" />
           <ImageCard src="/collection/jacket.jpg" name="Jacket" />
-          <ImageCard src="/collection/tshirt.jpg" name="tshirt" />
+          <AddAnotherCard />
         </div>
       </div>
       <div className="flex flex-col max-w-2xl m-12">
