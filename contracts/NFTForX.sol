@@ -61,6 +61,17 @@ contract NFTForX {
     return userRedeem[userAddr];
   }
 
+  function getUserRedeemOption(address userAddr) external view returns (uint256[] memory) {
+    uint256[] storage userRedeems = userRedeem[userAddr];
+    uint256[] memory result = new uint256[](userRedeems.length);
+
+    for (uint256 i = 0; i < userRedeems.length; i++) {
+      result[i] = redeemFor[userRedeems[i]];
+    }
+
+    return result;
+  }
+
   modifier notExceedMaxRedeem() {
     uint256 tokenCount = userRedeemCount(msg.sender);
     require(tokenCount < _maxRedeemPerUser, "Caller exceed redeem limit.");
