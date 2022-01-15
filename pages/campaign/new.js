@@ -1,5 +1,6 @@
 import { useState } from "react";
-import ImageCard from "../../components/common/ImageCard";
+import ImageCard from "../../components/campaign/ImageCard";
+import MaxRedeemableTable from "../../components/campaign/MaxRedeemableTable";
 import NavBar from "../../components/common/NavBar";
 
 const NewCampaignPage = () => {
@@ -7,7 +8,6 @@ const NewCampaignPage = () => {
   const [collectionAddr, setCollectionAddr] = useState("");
   return (
     <div>
-      <NavBar />
       <div className="flex flex-col max-w-xl m-10 space-y-6">
         <div>
           <label
@@ -40,11 +40,18 @@ const NewCampaignPage = () => {
           />
         </div>
       </div>
-      <div className="grid max-w-6xl grid-cols-4 space-x-6">
-        <ImageCard src="/collection/tshirt.jpg" name="T Shirt" />
-        <ImageCard src="/collection/hat.jpg" name="Hat" />
-        <ImageCard src="/collection/jacket.jpg" name="Jacket" />
-        <ImageCard src="/collection/tshirt.jpg" name="tshirt" />
+      <div className="flex flex-col m-12">
+        <p className="mb-4 text-xl">Options</p>
+        <div className="grid max-w-6xl grid-cols-4 space-x-6">
+          <ImageCard src="/collection/tshirt.jpg" name="T Shirt" />
+          <ImageCard src="/collection/hat.jpg" name="Hat" />
+          <ImageCard src="/collection/jacket.jpg" name="Jacket" />
+          <ImageCard src="/collection/tshirt.jpg" name="tshirt" />
+        </div>
+      </div>
+      <div className="flex flex-col max-w-2xl m-12">
+        <p className="mb-4 text-xl">Max Redeemable</p>
+        <MaxRedeemableTable />
       </div>
     </div>
   );
