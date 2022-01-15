@@ -4,7 +4,7 @@ import { useMoralis } from 'react-moralis';
 
 function RedeemableItem({ tokenId, redeem }) {
   return (
-    <div className='p-4'>
+    <div>
       <div className='max-w-sm rounded shadow-lg'>
         <img
           className='w-full'
@@ -28,20 +28,48 @@ function RedeemableItem({ tokenId, redeem }) {
 }
 
 function RedeemableContainer({ children }) {
-  return <div className='grid grid-cols-4 gap-4'>{children}</div>;
+  return <div className='grid grid-cols-4 gap-4 mx-8'>{children}</div>;
+}
+
+function HistoryItem({ tokenId }) {
+  return (
+    <div>
+      <div className='max-w-sm rounded shadow-lg'>
+        <img
+          className='w-full'
+          src='https://images-ext-1.discordapp.net/external/1Y9ri4gBB0Ak1Zm2seQMTzavd6XDXpMO5RRzhqWbu8Y/https/gateway.pinata.cloud/ipfs/QmNTtzrUyifb9NC2CnnYN44QZyRGvzJNGPhdmQr8BjHMwx'
+          alt='Historical Item'
+        />
+        <div className='px-6 py-4'>
+          <div className='font-semibold text-xl mb-2'>Token #{tokenId}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function HistoryContainer({ children }) {
+  return <div className='grid grid-cols-4 gap-4 mx-8'>{children}</div>;
 }
 
 export default function Home() {
   const { account } = useMoralis();
   const [userNFTs, setUserNFTs] = useState([]);
+  const [historyTransactions, setHistoryTransactions] = useState([]);
 
   useEffect(() => {
     getUserNFTs();
+    getHistoricalTransactions();
   }, [account]);
 
   async function getUserNFTs() {
     console.log(`Getting... NFT token IDs \naccount: ${account}`);
-    setUserNFTs([1, 2, 3]);
+    setUserNFTs([1, 2, 3, 4, 6, 7]);
+  }
+
+  async function getHistoricalTransactions() {
+    console.log(`Getting... historical transactions \naccount: ${account}`);
+    setHistoryTransactions([1, 2, 3]);
   }
 
   async function redeem(tokenId) {
@@ -56,7 +84,7 @@ export default function Home() {
         <link rel='icon' href='/favicon.ico' />
       </Head>
 
-      <div className='px-6 py-4'>
+      <div className='px-8 py-4 pt-8'>
         <div className='font-bold text-2xl mb-2'>Your Redeemable NFTs</div>
       </div>
 
@@ -65,6 +93,17 @@ export default function Home() {
           <RedeemableItem key={tokenId} tokenId={tokenId} redeem={redeem} />
         ))}
       </RedeemableContainer>
+
+      <div className='px-8 py-4 pt-8'>
+        <div className='font-bold text-2xl mb-2'>Transaction History</div>
+      </div>
+      <HistoryContainer>
+        {historyTransactions.map((tokenId) => (
+          <HistoryItem key={tokenId} tokenId={tokenId} />
+        ))}
+      </HistoryContainer>
+
+      <div className='mb-8'></div>
     </div>
   );
 }
