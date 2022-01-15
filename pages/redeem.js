@@ -34,6 +34,7 @@ const Home = () => {
   const [historyTransactions, setHistoryTransactions] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedTokenId, setSelectedTokenId] = useState();
+  const [isTokenApproved, setIsTokenApproved] = useState(false);
 
   useEffect(() => {
     if (!isWeb3Enabled) enableWeb3();
@@ -43,6 +44,10 @@ const Home = () => {
     getUserNFTs();
     getHistoricalTransactions();
   }, [account, isWeb3Enabled]);
+
+  useEffect(() => {
+    getTokenApproval();
+  }, [selectedTokenId]);
 
   async function enableWeb3() {
     console.log('enabling web3 ...');
@@ -127,6 +132,46 @@ const Home = () => {
     }
   }
 
+  async function getTokenApproval() {
+    if (!isWeb3Enabled) await enableWeb3();
+
+    try {
+      const result = await Moralis.executeFunction({
+        contractAddress: process.env.NEXT_PUBLIC_NFTMOCK_ADDRESS,
+        functionName: 'getApproved',
+        abi: MockNFT.abi,
+        params: {
+          tokenId: selectedTokenId,
+        },
+      });
+
+      console.log(result);
+      setIsTokenApproved(result === process.env.NEXT_PUBLIC_NFTFORX_ADDRESS);
+    } catch (error) {
+      console.log(error.message || error);
+    }
+  }
+
+  async function approve() {
+    if (!isWeb3Enabled) await enableWeb3();
+
+    try {
+      const result = await Moralis.executeFunction({
+        contractAddress: process.env.NEXT_PUBLIC_NFTMOCK_ADDRESS,
+        functionName: 'approve',
+        abi: MockNFT.abi,
+        params: {
+          to: process.env.NEXT_PUBLIC_NFTFORX_ADDRESS,
+          tokenId: selectedTokenId,
+        },
+      });
+
+      console.log(result);
+    } catch (error) {
+      console.log(error.message || error);
+    }
+  }
+
   if (!isAuthenticated) {
     return (
       <div className='px-8 py-4 pt-8'>
@@ -142,6 +187,8 @@ const Home = () => {
         setShowModal={setShowModal}
         tokenId={selectedTokenId}
         redeem={redeem}
+        approve={approve}
+        isTokenApproved={isTokenApproved}
       />
 
       <div className='mb-4'>
