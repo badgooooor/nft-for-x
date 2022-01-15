@@ -35,6 +35,7 @@ const Home = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedTokenId, setSelectedTokenId] = useState();
   const [isTokenApproved, setIsTokenApproved] = useState(false);
+  const [isApprovalLoading, setIsApprovalLoading] = useState(false);
 
   useEffect(() => {
     if (!isWeb3Enabled) enableWeb3();
@@ -55,6 +56,7 @@ const Home = () => {
   }
 
   async function getUserNFTs() {
+    if (!account) return;
     if (!isWeb3Enabled) await enableWeb3();
 
     console.log(`Getting... NFT token IDs \naccount: ${account}`);
@@ -116,6 +118,7 @@ const Home = () => {
 
   async function redeem(optionIndex) {
     if (!isWeb3Enabled) await enableWeb3();
+    setIsApprovalLoading(true);
 
     try {
       await Moralis.executeFunction({
@@ -127,12 +130,15 @@ const Home = () => {
           optionId: optionIndex,
         },
       });
+
+      setIsApprovalLoading(false);
     } catch (error) {
       console.log(error.message || error);
     }
   }
 
   async function getTokenApproval() {
+    if (!selectedTokenId) return;
     if (!isWeb3Enabled) await enableWeb3();
 
     try {
@@ -154,6 +160,7 @@ const Home = () => {
 
   async function approve() {
     if (!isWeb3Enabled) await enableWeb3();
+    setIsApprovalLoading(true);
 
     try {
       const result = await Moralis.executeFunction({
@@ -168,6 +175,8 @@ const Home = () => {
 
       console.log(result);
       await getTokenApproval();
+
+      setIsApprovalLoading(false);
     } catch (error) {
       console.log(error.message || error);
     }
@@ -190,6 +199,7 @@ const Home = () => {
         redeem={redeem}
         approve={approve}
         isTokenApproved={isTokenApproved}
+        isApprovalLoading={isApprovalLoading}
       />
 
       <div className='mb-4'>

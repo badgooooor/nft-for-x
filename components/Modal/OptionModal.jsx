@@ -30,6 +30,7 @@ export default function OptionModal({
   redeem,
   approve,
   isTokenApproved,
+  isApprovalLoading,
 }) {
   const [optionItems, setOptionItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState();
@@ -43,8 +44,7 @@ export default function OptionModal({
     setOptionItems([1, 2, 3]);
   }
 
-  async function redeemItem(e) {
-    e.preventDefault();
+  async function redeemItem() {
     if (!selectedItem) return alert('Please select an item to redeem');
 
     await redeem(selectedItem);
@@ -103,17 +103,21 @@ export default function OptionModal({
                     <button
                       className='bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md px-8 py-2'
                       type='button'
-                      onClick={redeemItem}
+                      onClick={() => {
+                        if (!isApprovalLoading) redeemItem();
+                      }}
                     >
-                      Redeem
+                      {isApprovalLoading ? 'Loading...' : 'Redeem'}
                     </button>
                   ) : (
                     <button
                       className='bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md px-8 py-2'
                       type='button'
-                      onClick={approve}
+                      onClick={() => {
+                        if (!isApprovalLoading) approve();
+                      }}
                     >
-                      Approve
+                      {isApprovalLoading ? 'Loading...' : 'Approve'}
                     </button>
                   )}
                 </div>
