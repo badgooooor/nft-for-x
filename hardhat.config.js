@@ -23,12 +23,12 @@ module.exports = {
     artifacts: './src/artifacts'
   },
   networks: {
-    hardhat: {
-      chainId: +process.env.HARDHAT_CHAIN_ID || 1337
-    },
-    ropsten: {
-      url: process.env.ROPSTEN_URL,
-      accounts: [`0x${process.env.ROPSTEN_PRIVATE_KEY}`]
-    }
+    // hardhat: {
+    //   chainId: +process.env.HARDHAT_CHAIN_ID || 1337
+    // },
+    // ropsten: {
+    //   url: process.env.ROPSTEN_URL,
+    //   accounts: [`0x${process.env.ROPSTEN_PRIVATE_KEY}`]
+    // }
   }
 };
