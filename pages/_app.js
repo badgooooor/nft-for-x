@@ -4,6 +4,7 @@ import { MoralisProvider } from "react-moralis";
 
 import NavBar from "../components/common/NavBar";
 import { RecoilRoot } from "recoil";
+import Layout from "../components/common/Layout";
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -12,8 +13,9 @@ function MyApp({ Component, pageProps }) {
       serverUrl={process.env.NEXT_PUBLIC_MORALIS_SERVER_URL}
     >
       <RecoilRoot>
-        <NavBar />
-        <Component {...pageProps} />
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
       </RecoilRoot>
     </MoralisProvider>
   );
