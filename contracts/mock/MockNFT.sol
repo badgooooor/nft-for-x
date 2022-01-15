@@ -56,7 +56,7 @@ contract MockNFT is ERC721, Ownable {
             bytes(
                 string(
                     abi.encodePacked(
-                        '{"name": "NFT4X Pass #',
+                        '{"name": "OngNFT4X #',
                         (tokenId + 1).toString(),
                         '", "description": "NFT4X is Redeemable NFT so you can turn NFT to anything in real life!", "image": "',
                         output,
