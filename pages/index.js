@@ -2,6 +2,8 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { useMoralis } from 'react-moralis';
 
+import OptionModal from '../components/Modal/OptionModal';
+
 function RedeemableItem({ tokenId, redeem }) {
   return (
     <div>
@@ -53,9 +55,11 @@ function HistoryContainer({ children }) {
 }
 
 export default function Home() {
-  const { account } = useMoralis();
+  const { account, isAuthenticated } = useMoralis();
   const [userNFTs, setUserNFTs] = useState([]);
   const [historyTransactions, setHistoryTransactions] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedTokenId, setSelectedTokenId] = useState();
 
   useEffect(() => {
     getUserNFTs();
@@ -74,6 +78,16 @@ export default function Home() {
 
   async function redeem(tokenId) {
     console.log(`Redeeming... token #${tokenId} \naccount: ${account}`);
+    setShowModal(true);
+    setSelectedTokenId(tokenId);
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className='px-8 py-4 pt-8'>
+        <div className='font-bold text-2xl mb-2'>Please Connect Your Wallet</div>
+      </div>
+    );
   }
 
   return (
@@ -83,6 +97,8 @@ export default function Home() {
         <meta name='description' content='Best NFT Hack Application' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
+
+      <OptionModal showModal={showModal} setShowModal={setShowModal} tokenId={selectedTokenId} />
 
       <div className='px-8 py-4 pt-8'>
         <div className='font-bold text-2xl mb-2'>Your Redeemable NFTs</div>
