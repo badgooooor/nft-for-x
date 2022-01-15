@@ -1,29 +1,34 @@
-// We require the Hardhat Runtime Environment explicitly here. This is optional
-// but useful for running the script in a standalone fashion through `node <script>`.
-//
-// When running the script with `npx hardhat run <script>` you'll find the Hardhat
-// Runtime Environment's members available in the global scope.
-const hre = require("hardhat");
+//! Replace nftCreator with your MetaMask account address
 
 async function main() {
-  // Hardhat always runs the compile task when running scripts with its command
-  // line interface.
-  //
-  // If this script is run directly using `node` you may want to call compile
-  // manually to make sure everything is compiled
-  // await hre.run('compile');
+  const [nftCreator] = await ethers.getSigners();
+  // Mock NFT
+  const MockNFT = await ethers.getContractFactory("MockNFT");
+  const mockNFT = await MockNFT.deploy();
+  await mockNFT.deployed();
 
-  // We get the contract to deploy
-  const Greeter = await hre.ethers.getContractFactory("Greeter");
-  const greeter = await Greeter.deploy("Hello world!");
+  console.log("Mock NFT deployed at: " + mockNFT.address);
 
-  await greeter.deployed();
+  // TODO: Put address here!
+  // Mint NFT
+  await mockNFT.mint(nftCreator.address);
 
-  console.log("Greeter deployed to:", greeter.address);
+  // NFTForXFactory
+  const NFTForXFactory = await ethers.getContractFactory("NFTForXFactory");
+  const nftForXFactory = await NFTForXFactory.deploy();
+  await nftForXFactory.deployed();
+
+  console.log("NFTForX Factory deployed at: " + nftForXFactory.address);
+
+  // Create a new campaign
+  // Params:
+  // - owner: address of the owner of the campaign
+  // - collection: address of the collection of NFT
+  // - maxRedeemPerUser: maximum number of NFT that can be redeemed per user
+  await nftForXFactory.createCampaign(nftCreator.address, mockNFT.address, 20); // => this will Emit NFTForXCreated event
 }
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
+
 main()
   .then(() => process.exit(0))
   .catch((error) => {
