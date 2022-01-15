@@ -1,7 +1,7 @@
 //! Replace nftCreator with your MetaMask account address
 
 async function main() {
-  const [nftCreator] = await ethers.getSigners();
+  const [nftCreator, nftUser] = await ethers.getSigners();
   // Mock NFT
   const MockNFT = await ethers.getContractFactory('MockNFT');
   const mockNFT = await MockNFT.deploy();
@@ -11,7 +11,7 @@ async function main() {
 
   // TODO: Put address here!
   // Mint NFT
-  await mockNFT.mintTo(nftCreator.address, 10);
+  await mockNFT.mintTo(nftUser.address, 10);
 
   // NFTForXFactory
   const NFTForXFactory = await ethers.getContractFactory('NFTForXFactory');
