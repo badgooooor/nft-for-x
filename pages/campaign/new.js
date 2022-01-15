@@ -15,6 +15,7 @@ const NewCampaignPage = () => {
   const [campaignOwner, setCampaignOwner] = useState("");
   const [collectionAddr, setCollectionAddr] = useState("");
   const [maxRedeem, setMaxRedeem] = useState("");
+  const [loading, setLoading] = useState(false);
   // Option
   const [campaign, setCampaign] = useRecoilState(campaignOptionState);
 
@@ -28,6 +29,7 @@ const NewCampaignPage = () => {
   }
 
   async function createNewCampaign() {
+    setLoading(true);
     if (!isWeb3Enabled) await enableWeb3();
 
     try {
@@ -42,10 +44,12 @@ const NewCampaignPage = () => {
         },
       });
 
-      console.log(result);
+      alert(`Campaign created successfully! TX: ${result.transactionHash}`);
     } catch (error) {
+      alert(error.message);
       console.log(error.message || error);
     }
+    setLoading(false);
   }
 
   return (
@@ -147,7 +151,7 @@ const NewCampaignPage = () => {
       <div className="w-full bg-white rounded-md flex flex-col p-4 mb-4 shadow-lg">
         <div className="font-bold text-xl">Create a new Campaign</div>
         <button onClick={createNewCampaign} className="self-center w-96 ease-in duration-300 bg-dark-slate-blue hover:bg-white text-white hover:text-dark-slate-blue border-2 border-dark-slate-blue rounded-md px-8 py-2">
-          <div className="text-lg">Make Transaction</div>
+          <div className="text-lg">{loading ? `Loading...` : `Make Transaction`}</div>
         </button>
       </div>
       {/* <div className="w-full bg-white rounded-md flex flex-col p-4 mb-4 shadow-lg">
