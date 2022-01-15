@@ -3,10 +3,11 @@ pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract MockNFT is ERC721, Ownable {
+contract MockNFT is ERC721Enumerable, Ownable {
     using Strings for uint256;
 
     uint256 public maxSupply = 500;
