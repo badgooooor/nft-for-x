@@ -58,7 +58,7 @@ contract NFTForX {
 
   modifier notExceedMaxRedeem() {
     uint256 tokenCount = userRedeemCount(msg.sender);
-    require(tokenCount <= _maxRedeemPerUser, "Caller exceed redeem limit.");
+    require(tokenCount < _maxRedeemPerUser, "Caller exceed redeem limit.");
     _;
   }
 
