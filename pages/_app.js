@@ -1,8 +1,9 @@
-import '../styles/globals.css';
+import "../styles/globals.css";
 
-import { MoralisProvider } from 'react-moralis';
+import { MoralisProvider } from "react-moralis";
 
-import NavBar from '../components/common/NavBar';
+import NavBar from "../components/common/NavBar";
+import { RecoilRoot } from "recoil";
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -10,8 +11,10 @@ function MyApp({ Component, pageProps }) {
       appId={process.env.NEXT_PUBLIC_MORALIS_APP_ID}
       serverUrl={process.env.NEXT_PUBLIC_MORALIS_SERVER_URL}
     >
-      <NavBar />
-      <Component {...pageProps} />
+      <RecoilRoot>
+        <NavBar />
+        <Component {...pageProps} />
+      </RecoilRoot>
     </MoralisProvider>
   );
 }

@@ -1,11 +1,15 @@
 import { useState } from "react";
+import { useRecoilState } from "recoil";
+import AddAnotherCard from "../../components/campaign/AddAnotherCard";
 import ImageCard from "../../components/campaign/ImageCard";
 import MaxRedeemableTable from "../../components/campaign/MaxRedeemableTable";
-import NavBar from "../../components/common/NavBar";
+import { campaignOptionState, campaignState } from "../../lib/states";
 
 const NewCampaignPage = () => {
   const [campaignName, setCampaignName] = useState("");
   const [collectionAddr, setCollectionAddr] = useState("");
+  const [campaign, setCampaign] = useRecoilState(campaignOptionState);
+
   return (
     <div>
       <div className="flex flex-col max-w-xl m-10 space-y-6">
@@ -46,7 +50,7 @@ const NewCampaignPage = () => {
           <ImageCard src="/collection/tshirt.jpg" name="T Shirt" />
           <ImageCard src="/collection/hat.jpg" name="Hat" />
           <ImageCard src="/collection/jacket.jpg" name="Jacket" />
-          <ImageCard src="/collection/tshirt.jpg" name="tshirt" />
+          <AddAnotherCard />
         </div>
       </div>
       <div className="flex flex-col max-w-2xl m-12">

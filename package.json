@@ -16,7 +16,8 @@
     "next": "11.1.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-moralis": "^0.3.11"
+    "react-moralis": "^0.3.11",
+    "recoil": "^0.5.2"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.2",
