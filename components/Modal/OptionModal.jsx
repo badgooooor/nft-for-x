@@ -91,7 +91,7 @@ export default function OptionModal({ showModal, setShowModal, tokenId }) {
                       setSelectedItem(null);
                     }}
                   >
-                    Cancle
+                    Cancel
                   </button>
                   <button
                     className='bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md px-8 py-2'
