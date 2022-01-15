@@ -1,9 +1,9 @@
-import "../styles/globals.css";
+import '../styles/globals.css';
 
-import { MoralisProvider } from "react-moralis";
+import { MoralisProvider } from 'react-moralis';
 
-import NavBar from "../components/common/NavBar";
-import { RecoilRoot } from "recoil";
+import NavBar from '../components/common/NavBar';
+import { RecoilRoot } from 'recoil';
 
 function MyApp({ Component, pageProps }) {
   return (
