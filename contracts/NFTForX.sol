@@ -6,6 +6,7 @@ import "hardhat/console.sol";
 
 contract NFTForX {
   uint256 private _maxRedeemPerUser;
+  uint256 private _totalRedeemCount;
 
   // Address to receive NFT from redeemer.
   address private _owner;
@@ -36,6 +37,10 @@ contract NFTForX {
 
   function maxRedeemPerUser() public view virtual returns (uint256) {
     return _maxRedeemPerUser;
+  }
+
+  function totalRedeemCount() public view virtual returns (uint256) {
+    return _totalRedeemCount;
   }
 
   modifier onlyOwner() {
@@ -78,6 +83,7 @@ contract NFTForX {
     userRedeem[msg.sender].push(tokenId);
     redeemFor[tokenId] = optionId;
     redeemCount[msg.sender] += 1;
+    _totalRedeemCount += 1;
 
     emit Redeem(msg.sender, tokenId, optionId); 
     return tokenId;
