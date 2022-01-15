@@ -88,27 +88,25 @@ export default function OptionModal({
                 </div>
                 {/*footer*/}
                 <div className='flex items-center justify-end px-6 py-2 border-t border-solid border-blueGray-200 rounded-b'>
+                  <button
+                    className='hover:bg-black-100 text-red-500 font-medium rounded-md px-8 py-2'
+                    type='button'
+                    onClick={() => {
+                      setShowModal(false);
+                      setSelectedItem(null);
+                    }}
+                  >
+                    {' '}
+                    Cancel
+                  </button>
                   {isTokenApproved ? (
-                    <>
-                      <button
-                        className='hover:bg-black-100 text-red-500 font-medium rounded-md px-8 py-2'
-                        type='button'
-                        onClick={() => {
-                          setShowModal(false);
-                          setSelectedItem(null);
-                        }}
-                      >
-                        {' '}
-                        Cancel
-                      </button>
-                      <button
-                        className='bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md px-8 py-2'
-                        type='button'
-                        onClick={redeemItem}
-                      >
-                        Redeem
-                      </button>
-                    </>
+                    <button
+                      className='bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md px-8 py-2'
+                      type='button'
+                      onClick={redeemItem}
+                    >
+                      Redeem
+                    </button>
                   ) : (
                     <button
                       className='bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md px-8 py-2'

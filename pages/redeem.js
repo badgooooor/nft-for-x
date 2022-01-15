@@ -167,6 +167,7 @@ const Home = () => {
       });
 
       console.log(result);
+      await getTokenApproval();
     } catch (error) {
       console.log(error.message || error);
     }
