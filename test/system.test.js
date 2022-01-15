@@ -154,11 +154,14 @@ describe("NFTForX", function () {
     }
 
     const userRedeemed = await nftForX.getUserRedeem(alice.address);
+    const userRedeemedOption = await nftForX.getUserRedeemOption(alice.address);
+
     // Check NFT redeem
     for (let i = 0; i < 3; i++) {
       expect(await nftForX.redeemFor(userRedeemed[i].toString())).to.equal(
         i + 1
       );
+      expect(userRedeemedOption[i]).to.equal(i + 1);
     }
   });
 });
