@@ -115,7 +115,6 @@ export default function Home() {
 
       tempUserNFTs.push({ tokenId, ...metaData });
     }
-
     setUserNFTs([...tempUserNFTs]);
   }
 
@@ -168,33 +167,40 @@ export default function Home() {
         <link rel='icon' href='/favicon.ico' />
       </Head>
 
-      <OptionModal
-        showModal={showModal}
-        setShowModal={setShowModal}
-        tokenId={selectedTokenId}
-        redeem={redeem}
-      />
+      <div className='p-16'>
+        <OptionModal
+          showModal={showModal}
+          setShowModal={setShowModal}
+          tokenId={selectedTokenId}
+          redeem={redeem}
+        />
 
-      <div className='px-8 py-4 pt-8'>
-        <div className='font-bold text-2xl mb-2'>Your Redeemable NFTs</div>
+        <div className='px-8 py-4 pt-8'>
+          <div className='font-bold text-2xl mb-2'>Your Redeemable NFTs</div>
+        </div>
+
+        <RedeemableContainer>
+          {userNFTs.map(({ tokenId, image }) => (
+            <RedeemableItem
+              key={tokenId}
+              tokenId={tokenId}
+              openRedeem={openRedeem}
+              imgSrc={image}
+            />
+          ))}
+        </RedeemableContainer>
+
+        <div className='px-8 py-4 pt-8'>
+          <div className='font-bold text-2xl mb-2'>Transaction History</div>
+        </div>
+        <HistoryContainer>
+          {historyTransactions.map((tokenId) => (
+            <HistoryItem key={tokenId} tokenId={tokenId} />
+          ))}
+        </HistoryContainer>
+
+        <div className='mb-8'></div>
       </div>
-
-      <RedeemableContainer>
-        {userNFTs.map(({ tokenId, image }) => (
-          <RedeemableItem key={tokenId} tokenId={tokenId} openRedeem={openRedeem} imgSrc={image} />
-        ))}
-      </RedeemableContainer>
-
-      <div className='px-8 py-4 pt-8'>
-        <div className='font-bold text-2xl mb-2'>Transaction History</div>
-      </div>
-      <HistoryContainer>
-        {historyTransactions.map((tokenId) => (
-          <HistoryItem key={tokenId} tokenId={tokenId} />
-        ))}
-      </HistoryContainer>
-
-      <div className='mb-8'></div>
     </div>
   );
 }
