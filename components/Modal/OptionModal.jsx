@@ -23,7 +23,7 @@ function OptionItem({ optionIndex, setSelectedItem }) {
   );
 }
 
-export default function OptionModal({ showModal, setShowModal, tokenId }) {
+export default function OptionModal({ showModal, setShowModal, tokenId, redeem }) {
   const [optionItems, setOptionItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState();
 
@@ -40,13 +40,11 @@ export default function OptionModal({ showModal, setShowModal, tokenId }) {
     e.preventDefault();
     if (!selectedItem) return alert('Please select an item to redeem');
 
-    console.log(`Redeeming... item #${selectedItem}`);
-
-    // If successfully redeemed
+    await redeem(selectedItem);
     setShowModal(false);
     setSelectedItem(null);
   }
-  console.log(selectedItem);
+
   return (
     <>
       {showModal ? (
