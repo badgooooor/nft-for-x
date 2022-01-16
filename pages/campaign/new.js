@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useRecoilState } from "recoil";
 import { useMoralis } from "react-moralis";
+import Link from "next/link";
 
 import AddAnotherCard from "../../components/campaign/AddAnotherCard";
 import ImageCard from "../../components/campaign/ImageCard";
@@ -58,12 +59,15 @@ const NewCampaignPage = () => {
   }
 
   return (
-    <div className="py-8 flex-col justify-center">
-      <div className="font-bold text-2xl mb-2">Create new campaign</div>
+    <div className="flex-col justify-center py-8">
+      <button className="px-4 py-2 mb-4 text-sm text-white duration-300 ease-in bg-blue-500 border-2 border-blue-500 rounded-md hover:bg-white hover:bg-opacity-20 hover:text-blue-500">
+        <Link href={`/campaign`}>Back to my campaigns</Link>
+      </button>
+      <div className="mb-2 text-2xl font-bold">Create new campaign</div>
 
-      <div className="w-full bg-white rounded-md flex flex-col p-4 mb-4 shadow-lg">
-        <div className="font-bold text-xl mb-2">General</div>
-        <div className="font-light text-md mb-2">
+      <div className="flex flex-col w-full p-4 mb-4 bg-white rounded-md shadow-lg">
+        <div className="mb-2 text-xl font-bold">General</div>
+        <div className="mb-2 font-light text-md">
           Start with some information
         </div>
 
@@ -119,25 +123,25 @@ const NewCampaignPage = () => {
         </div>
       </div>
 
-      <div className="w-full bg-white rounded-md flex flex-col p-4 mb-4 shadow-lg">
-        <div className="flex justify-between items-center">
+      <div className="flex flex-col w-full p-4 mb-4 bg-white rounded-md shadow-lg">
+        <div className="flex items-center justify-between">
           <div>
-            <div className="font-bold text-xl">Redeemable Item Options</div>
-            <div className="font-light text-md mb-2">
+            <div className="text-xl font-bold">Redeemable Item Options</div>
+            <div className="mb-2 font-light text-md">
               Add options for redeemer to select
             </div>
           </div>
           <div>
             <button
               onClick={() => alert("We mock this 😂!")}
-              className="ease-in duration-300 bg-dark-slate-blue hover:bg-white text-white hover:text-dark-slate-blue border-2 border-dark-slate-blue rounded-md px-8 py-2"
+              className="px-8 py-2 text-white duration-300 ease-in border-2 rounded-md bg-dark-slate-blue hover:bg-white hover:text-dark-slate-blue border-dark-slate-blue"
             >
               <div className="text-xs">Add another option</div>
             </button>
           </div>
         </div>
 
-        <div className="grid sm:grid-cols-4 grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           <ImageCard
             src="/collection/tshirt.jpg"
             name="T Shirt"
@@ -155,11 +159,11 @@ const NewCampaignPage = () => {
           />
         </div>
       </div>
-      <div className="w-full bg-white rounded-md flex flex-col p-4 mb-4 shadow-lg">
-        <div className="font-bold text-xl">Create a new Campaign</div>
+      <div className="flex flex-col w-full p-4 mb-4 bg-white rounded-md shadow-lg">
+        <div className="text-xl font-bold">Create a new Campaign</div>
         <button
           onClick={createNewCampaign}
-          className="self-center w-96 ease-in duration-300 bg-dark-slate-blue hover:bg-white text-white hover:text-dark-slate-blue border-2 border-dark-slate-blue rounded-md px-8 py-2"
+          className="self-center px-8 py-2 text-white duration-300 ease-in border-2 rounded-md w-96 bg-dark-slate-blue hover:bg-white hover:text-dark-slate-blue border-dark-slate-blue"
         >
           <div className="text-lg">
             {loading ? `Loading...` : `Make Transaction`}
