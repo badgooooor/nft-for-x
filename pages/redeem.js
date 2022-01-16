@@ -137,9 +137,11 @@ const Home = () => {
         },
       });
 
-      setIsApprovalLoading(false);
       getUserNFTs();
       getUserRedeemeds();
+
+      alert('Successfully redeemed');
+      setIsApprovalLoading(false);
     } catch (error) {
       console.log(error.message || error);
     }
