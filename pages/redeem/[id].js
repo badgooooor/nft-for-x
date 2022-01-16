@@ -279,8 +279,12 @@ const Home = () => {
           ) : userRedeemeds.length === 0 ? (
             <div className='w-full text-xl mb-2'>You don&apos;t have any redeemed item.</div>
           ) : (
-            userRedeemeds.map(({ tokenId, optionId, image }) => (
-              <NFTRedeemedCard key={tokenId} tokenId={tokenId} optionId={optionId} />
+            userRedeemeds.map(({ tokenId, optionId }) => (
+              <NFTRedeemedCard
+                key={tokenId}
+                tokenId={tokenId}
+                optionId={optionId === '3' ? '2' : optionId}
+              />
             ))
           )}
         </RedeemedTokenContainer>
