@@ -1,33 +1,18 @@
 import { useEffect, useState } from "react";
 import { useMoralis } from "react-moralis";
 
-import NFTRedeemCard from "../components/campaign/NFTRedeemCard";
-import OptionModal from "../components/Modal/OptionModal";
-import MockNFT from "../src/artifacts/contracts/mock/MockNFT.sol/MockNFT.json";
-import NFTForX from "../src/artifacts/contracts/NFTForX.sol/NFTForX.json";
+import MockNFT from '../src/artifacts/contracts/mock/MockNFT.sol/MockNFT.json';
+import NFTForX from '../src/artifacts/contracts/NFTForX.sol/NFTForX.json';
 
-function HistoryItem({ tokenId }) {
-  return (
-    <div>
-      <div className="max-w-sm rounded shadow-lg">
-        <img
-          className="w-full"
-          src="https://images-ext-1.discordapp.net/external/1Y9ri4gBB0Ak1Zm2seQMTzavd6XDXpMO5RRzhqWbu8Y/https/gateway.pinata.cloud/ipfs/QmNTtzrUyifb9NC2CnnYN44QZyRGvzJNGPhdmQr8BjHMwx"
-          alt="Historical Item"
-        />
-        <div className="px-6 py-4">
-          <div className="font-semibold text-xl mb-2">Token #{tokenId}</div>
-        </div>
-      </div>
-    </div>
-  );
-}
+import NFTRedeemCard from '../components/campaign/NFTRedeemCard';
+import OptionModal from '../components/Modal/OptionModal';
+import NFTRedeemedCard from '../components/redeem/NFTRedeemedCard';
 
 const Home = () => {
   const { account, isAuthenticated, Moralis, isWeb3Enabled } = useMoralis();
 
   const [userNFTs, setUserNFTs] = useState([]);
-  const [historyTransactions, setHistoryTransactions] = useState([]);
+  const [userRedeemeds, setUserRedeemeds] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedTokenId, setSelectedTokenId] = useState();
   const [isTokenApproved, setIsTokenApproved] = useState(false);
@@ -39,7 +24,7 @@ const Home = () => {
 
   useEffect(() => {
     getUserNFTs();
-    getHistoricalTransactions();
+    getUserRedeemeds();
   }, [account, isWeb3Enabled]);
 
   useEffect(() => {
@@ -47,30 +32,45 @@ const Home = () => {
   }, [selectedTokenId]);
 
   async function enableWeb3() {
-    console.log("enabling web3 ...");
     await Moralis.enableWeb3();
+  }
+
+  async function getTokenMetaData(tokenId) {
+    const tokenURI = await Moralis.executeFunction({
+      contractAddress: process.env.NEXT_PUBLIC_NFTMOCK_ADDRESS,
+      functionName: 'tokenURI',
+      abi: MockNFT.abi,
+      params: {
+        tokenId: tokenId,
+      },
+    });
+
+    let data = tokenURI.split(',')[1];
+    let buff = Buffer.from(data, 'base64');
+    let text = buff.toString();
+    return JSON.parse(text);
   }
 
   async function getUserNFTs() {
     if (!account) return;
     if (!isWeb3Enabled) await enableWeb3();
 
-    console.log(`Getting... NFT token IDs \naccount: ${account}`);
-    const options = {
-      contractAddress: process.env.NEXT_PUBLIC_NFTMOCK_ADDRESS,
-      functionName: "balanceOf",
-      abi: MockNFT.abi,
-      params: {
-        owner: account,
-      },
-    };
+    const balance = Number.parseInt(
+      await Moralis.executeFunction({
+        contractAddress: process.env.NEXT_PUBLIC_NFTMOCK_ADDRESS,
+        functionName: 'balanceOf',
+        abi: MockNFT.abi,
+        params: {
+          owner: account,
+        },
+      })
+    );
 
-    const balance = Number.parseInt(await Moralis.executeFunction(options));
     let tempUserNFTs = [];
     for (let i = 0; i < balance; i++) {
       const tokenId = await Moralis.executeFunction({
         contractAddress: process.env.NEXT_PUBLIC_NFTMOCK_ADDRESS,
-        functionName: "tokenOfOwnerByIndex",
+        functionName: 'tokenOfOwnerByIndex',
         abi: MockNFT.abi,
         params: {
           owner: account,
@@ -78,36 +78,47 @@ const Home = () => {
         },
       });
 
-      const tokenURI = await Moralis.executeFunction({
-        contractAddress: process.env.NEXT_PUBLIC_NFTMOCK_ADDRESS,
-        functionName: "tokenURI",
-        abi: MockNFT.abi,
-        params: {
-          tokenId: tokenId,
-        },
-      });
-
-      let data = tokenURI.split(",")[1];
-      let buff = Buffer.from(data, "base64");
-      let text = buff.toString();
-      const metaData = JSON.parse(text);
+      const metaData = await getTokenMetaData(tokenId);
 
       tempUserNFTs.push({ tokenId, ...metaData });
     }
+
     setUserNFTs([...tempUserNFTs]);
   }
 
-  async function getHistoricalTransactions() {
+  async function getUserRedeemeds() {
+    if (!account) return;
     if (!isWeb3Enabled) await enableWeb3();
 
-    console.log(`Getting... historical transactions \naccount: ${account}`);
-    setHistoryTransactions([1, 2, 3]);
+    const userRedeems = await Moralis.executeFunction({
+      contractAddress: process.env.NEXT_PUBLIC_NFTFORX_ADDRESS,
+      functionName: 'getUserRedeem',
+      abi: NFTForX.abi,
+      params: {
+        userAddr: account,
+      },
+    });
+
+    const userRedeemOptions = await Moralis.executeFunction({
+      contractAddress: process.env.NEXT_PUBLIC_NFTFORX_ADDRESS,
+      functionName: 'getUserRedeemOption',
+      abi: NFTForX.abi,
+      params: {
+        userAddr: account,
+      },
+    });
+
+    let tempArr = [];
+    for (let i = 0; i < userRedeems.length; i++) {
+      const metaData = await getTokenMetaData(userRedeems[i]);
+      tempArr.push({ tokenId: userRedeems[i], optionId: userRedeemOptions[i], ...metaData });
+    }
+
+    setUserRedeemeds([...tempArr]);
   }
 
   async function openRedeem(tokenId) {
     if (!isWeb3Enabled) await enableWeb3();
-
-    console.log(`Redeeming... token #${tokenId} \naccount: ${account}`);
     setShowModal(true);
     setSelectedTokenId(tokenId);
   }
@@ -127,6 +138,10 @@ const Home = () => {
         },
       });
 
+      getUserNFTs();
+      getUserRedeemeds();
+
+      alert('Successfully redeemed');
       setIsApprovalLoading(false);
     } catch (error) {
       console.log(error.message || error);
@@ -147,7 +162,6 @@ const Home = () => {
         },
       });
 
-      console.log(result);
       setIsTokenApproved(result === process.env.NEXT_PUBLIC_NFTFORX_ADDRESS);
     } catch (error) {
       console.log(error.message || error);
@@ -159,7 +173,7 @@ const Home = () => {
     setIsApprovalLoading(true);
 
     try {
-      const result = await Moralis.executeFunction({
+      await Moralis.executeFunction({
         contractAddress: process.env.NEXT_PUBLIC_NFTMOCK_ADDRESS,
         functionName: "approve",
         abi: MockNFT.abi,
@@ -169,7 +183,6 @@ const Home = () => {
         },
       });
 
-      console.log(result);
       await getTokenApproval();
 
       setIsApprovalLoading(false);
@@ -215,11 +228,11 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="mb-4">
-        <div className="font-bold text-2xl mb-2">Redeemed Items</div>
-        <div className="grid sm:grid-cols-4 grid-cols-2 gap-4">
-          {historyTransactions.map((tokenId) => (
-            <HistoryItem key={tokenId} tokenId={tokenId} />
+      <div className='mb-4'>
+        <div className='font-bold text-2xl mb-2'>Redeemed Items</div>
+        <div className='grid sm:grid-cols-4 grid-cols-2 gap-4'>
+          {userRedeemeds.map(({ tokenId, optionId, image }) => (
+            <NFTRedeemedCard key={tokenId} tokenId={tokenId} optionId={optionId} imgSrc={image} />
           ))}
         </div>
       </div>
