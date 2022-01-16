@@ -1,6 +1,6 @@
 import Tilt from 'react-parallax-tilt';
 
-const NFTRedeemCard = ({ tokenId, imgSrc, openRedeem }) => {
+const NFTRedeemableCard = ({ tokenId, imgSrc, openRedeem }) => {
   return (
     <Tilt>
       <div className='max-w-sm rounded-md shadow-lg bg-white'>
@@ -27,4 +27,4 @@ const NFTRedeemCard = ({ tokenId, imgSrc, openRedeem }) => {
   );
 };
 
-export default NFTRedeemCard;
+export default NFTRedeemableCard;

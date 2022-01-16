@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useMoralis } from 'react-moralis';
+import { useRouter } from 'next/router';
 
 import MockNFT from '../../src/artifacts/contracts/mock/MockNFT.sol/MockNFT.json';
 import NFTForX from '../../src/artifacts/contracts/NFTForX.sol/NFTForX.json';
 
-import NFTRedeemCard from '../../components/campaign/NFTRedeemCard';
+import NFTRedeemableCard from '../../components/redeem/NFTRedeemableCard';
 import OptionModal from '../../components/Modal/OptionModal';
 import NFTRedeemedCard from '../../components/redeem/NFTRedeemedCard';
-import { useRouter } from 'next/router';
 import UserTokenContainer from '../../components/redeem/UserTokenContainer';
 import RedeemedTokenContainer from '../../components/redeem/RedeemedTokenContainer';
 
@@ -253,7 +253,6 @@ const Home = () => {
 
       <div className='mb-4'>
         <div className='font-bold text-2xl mb-2'>Choose token to redeem</div>
-
         <UserTokenContainer>
           {userNftLoading ? (
             <div className='text-xl mb-2'>Loading... user's token</div>
@@ -261,7 +260,7 @@ const Home = () => {
             <div className='text-xl mb-2'>You don't have any token.</div>
           ) : (
             userNFTs.map(({ tokenId, image }) => (
-              <NFTRedeemCard
+              <NFTRedeemableCard
                 key={tokenId}
                 tokenId={tokenId}
                 openRedeem={openRedeem}
@@ -277,7 +276,7 @@ const Home = () => {
         <RedeemedTokenContainer>
           {userRedeemsLoading ? (
             <div className='text-xl mb-2'>Loading... user's redeemed items</div>
-          ) : userNFTs.length === 0 ? (
+          ) : userRedeemeds.length === 0 ? (
             <div className='w-full text-xl mb-2'>You don't have any redeemed item.</div>
           ) : (
             userRedeemeds.map(({ tokenId, optionId, image }) => (
