@@ -42,16 +42,18 @@ const MyCampaignTable = () => {
       );
     } else {
       return (
-        <tr>
-          <td colSpan={5} className="text-center p-8">
-            <div>
-              You didn&apos;t create any campaign,{" "}
-              <Link href="/campaign/new">
-                <a className="underline">Create new one here</a>
-              </Link>
-            </div>
-          </td>
-        </tr>
+        <tbody className="bg-white divide-y divide-gray-200">
+          <tr>
+            <td colSpan={5} className="text-center p-8">
+              <div>
+                You didn&apos;t create any campaign,{" "}
+                <Link href="/campaign/new">
+                  <a className="underline">Create new one here</a>
+                </Link>
+              </div>
+            </td>
+          </tr>
+        </tbody>
       );
     }
   }
