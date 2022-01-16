@@ -1,19 +1,20 @@
 import { useState, useEffect } from "react";
 import { useRecoilState } from "recoil";
-import { useMoralis } from 'react-moralis';
+import { useMoralis } from "react-moralis";
 
 import AddAnotherCard from "../../components/campaign/AddAnotherCard";
 import ImageCard from "../../components/campaign/ImageCard";
 import MaxRedeemableTable from "../../components/campaign/MaxRedeemableTable";
 import { campaignOptionState, campaignState } from "../../lib/states";
 
-import NFTForXFactory from '../../src/artifacts/contracts/NFTForXFactory.sol/NFTForXFactory.json';
+import NFTForXFactory from "../../src/artifacts/contracts/NFTForXFactory.sol/NFTForXFactory.json";
 
-
-const NewCampaignPage = () => {  
+const NewCampaignPage = () => {
   const { account, isAuthenticated, Moralis, isWeb3Enabled } = useMoralis();
   const [campaignOwner, setCampaignOwner] = useState("");
-  const [collectionAddr, setCollectionAddr] = useState("");
+  const [collectionAddr, setCollectionAddr] = useState(
+    process.env.NEXT_PUBLIC_NFTMOCK_ADDRESS
+  );
   const [maxRedeem, setMaxRedeem] = useState("");
   const [loading, setLoading] = useState(false);
   // Option
@@ -23,8 +24,12 @@ const NewCampaignPage = () => {
     if (!isWeb3Enabled) enableWeb3();
   }, []);
 
+  useEffect(() => {
+    setCampaignOwner(account);
+  }, [account]);
+
   async function enableWeb3() {
-    console.log('enabling web3 ...');
+    console.log("enabling web3 ...");
     await Moralis.enableWeb3();
   }
 
@@ -35,7 +40,7 @@ const NewCampaignPage = () => {
     try {
       const result = await Moralis.executeFunction({
         contractAddress: process.env.NEXT_PUBLIC_NFTFORX_FACTORY_ADDRESS,
-        functionName: 'createCampaign',
+        functionName: "createCampaign",
         abi: NFTForXFactory.abi,
         params: {
           __owner: campaignOwner,
@@ -123,7 +128,10 @@ const NewCampaignPage = () => {
             </div>
           </div>
           <div>
-            <button onClick={() => alert("We mock this 😂!")} className="ease-in duration-300 bg-dark-slate-blue hover:bg-white text-white hover:text-dark-slate-blue border-2 border-dark-slate-blue rounded-md px-8 py-2">
+            <button
+              onClick={() => alert("We mock this 😂!")}
+              className="ease-in duration-300 bg-dark-slate-blue hover:bg-white text-white hover:text-dark-slate-blue border-2 border-dark-slate-blue rounded-md px-8 py-2"
+            >
               <div className="text-xs">Add another option</div>
             </button>
           </div>
@@ -146,12 +154,16 @@ const NewCampaignPage = () => {
             description={"Jacket that make you drip like rockstar"}
           />
         </div>
-
       </div>
       <div className="w-full bg-white rounded-md flex flex-col p-4 mb-4 shadow-lg">
         <div className="font-bold text-xl">Create a new Campaign</div>
-        <button onClick={createNewCampaign} className="self-center w-96 ease-in duration-300 bg-dark-slate-blue hover:bg-white text-white hover:text-dark-slate-blue border-2 border-dark-slate-blue rounded-md px-8 py-2">
-          <div className="text-lg">{loading ? `Loading...` : `Make Transaction`}</div>
+        <button
+          onClick={createNewCampaign}
+          className="self-center w-96 ease-in duration-300 bg-dark-slate-blue hover:bg-white text-white hover:text-dark-slate-blue border-2 border-dark-slate-blue rounded-md px-8 py-2"
+        >
+          <div className="text-lg">
+            {loading ? `Loading...` : `Make Transaction`}
+          </div>
         </button>
       </div>
       {/* <div className="w-full bg-white rounded-md flex flex-col p-4 mb-4 shadow-lg">
