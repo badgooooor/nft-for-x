@@ -56,7 +56,6 @@ export default function OptionModal({
   }, []);
 
   async function getOptionItems() {
-    console.log(`Getting... option items of Token ID #${tokenId}`);
     setOptionItems([0, 1, 2]);
   }
 
@@ -78,11 +77,11 @@ export default function OptionModal({
               <div className='border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none'>
                 {/*header*/}
                 <div className='flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t'>
-                  <h3 className='text-3xl font-semibold'>Token ID #{tokenId}</h3>
+                  <h3 className='text-3xl font-semibold'>Redeem an item</h3>
                 </div>
                 {/*body*/}
                 <div className='relative p-6 flex-auto'>
-                  <div className='font-bold text-2xl mb-2'>Selected NFT</div>
+                  <div className='font-bold text-2xl mb-2'>Selected Token #{tokenId}</div>
                   <div className='max-w-xs rounded shadow-lg mb-4'>
                     <img
                       className='max-w-xs'
@@ -91,7 +90,7 @@ export default function OptionModal({
                     />
                   </div>
 
-                  <div className='font-bold text-2xl mb-2'>Options</div>
+                  <div className='font-bold text-2xl mb-2'>Select your item</div>
                   <div className='grid grid-cols-3 gap-4'>
                     {optionItems.map((optionId) => (
                       <OptionItem
