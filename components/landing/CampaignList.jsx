@@ -1,5 +1,5 @@
 import useCampaigns from "../../hooks/useCampaigns";
-import CampaignCard from "../campaign/CampaignCard";
+import CampaignCard from "./CampaignCard";
 
 const CampaignList = () => {
   const { campaigns } = useCampaigns();
@@ -7,7 +7,7 @@ const CampaignList = () => {
   return (
     <div>
       {campaigns.map((campaign, idx) => (
-        <CampaignCard key={`campaign-card-${idx}`} />
+        <CampaignCard key={`campaign-card-${idx}`} campaign={campaign} />
       ))}
     </div>
   );
