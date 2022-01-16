@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { useMoralis } from 'react-moralis';
+import { useEffect, useState } from "react";
+import { useMoralis } from "react-moralis";
 
 import MockNFT from '../src/artifacts/contracts/mock/MockNFT.sol/MockNFT.json';
 import NFTForX from '../src/artifacts/contracts/NFTForX.sol/NFTForX.json';
@@ -77,7 +77,9 @@ const Home = () => {
           index: String(i),
         },
       });
+
       const metaData = await getTokenMetaData(tokenId);
+
       tempUserNFTs.push({ tokenId, ...metaData });
     }
 
@@ -128,7 +130,7 @@ const Home = () => {
     try {
       await Moralis.executeFunction({
         contractAddress: process.env.NEXT_PUBLIC_NFTFORX_ADDRESS,
-        functionName: 'redeem',
+        functionName: "redeem",
         abi: NFTForX.abi,
         params: {
           tokenId: selectedTokenId,
@@ -153,7 +155,7 @@ const Home = () => {
     try {
       const result = await Moralis.executeFunction({
         contractAddress: process.env.NEXT_PUBLIC_NFTMOCK_ADDRESS,
-        functionName: 'getApproved',
+        functionName: "getApproved",
         abi: MockNFT.abi,
         params: {
           tokenId: selectedTokenId,
@@ -173,7 +175,7 @@ const Home = () => {
     try {
       await Moralis.executeFunction({
         contractAddress: process.env.NEXT_PUBLIC_NFTMOCK_ADDRESS,
-        functionName: 'approve',
+        functionName: "approve",
         abi: MockNFT.abi,
         params: {
           to: process.env.NEXT_PUBLIC_NFTFORX_ADDRESS,
@@ -191,8 +193,10 @@ const Home = () => {
 
   if (!isAuthenticated) {
     return (
-      <div className='px-8 py-4 pt-8'>
-        <div className='font-bold text-2xl mb-2'>Please Connect Your Wallet</div>
+      <div className="px-8 py-4 pt-8">
+        <div className="font-bold text-2xl mb-2">
+          Please Connect Your Wallet
+        </div>
       </div>
     );
   }
@@ -209,12 +213,17 @@ const Home = () => {
         isApprovalLoading={isApprovalLoading}
       />
 
-      <div className='mb-4'>
-        <div className='font-bold text-2xl mb-2'>Choose token to redeem</div>
+      <div className="mb-4">
+        <div className="font-bold text-2xl mb-2">Choose token to redeem</div>
 
-        <div className='grid sm:grid-cols-4 grid-cols-2 gap-4'>
+        <div className="grid sm:grid-cols-4 grid-cols-2 gap-4">
           {userNFTs.map(({ tokenId, image }) => (
-            <NFTRedeemCard key={tokenId} tokenId={tokenId} openRedeem={openRedeem} imgSrc={image} />
+            <NFTRedeemCard
+              key={tokenId}
+              tokenId={tokenId}
+              openRedeem={openRedeem}
+              imgSrc={image}
+            />
           ))}
         </div>
       </div>
