@@ -44,10 +44,17 @@ const useCampaigns = () => {
           abi: NFTForX.abi,
         });
 
+        const collection = await Moralis.executeFunction({
+          contractAddress: campaignAddr,
+          functionName: "collection",
+          abi: NFTForX.abi,
+        });
+
         campaigns.push({
           name,
           owner,
           campaignAddr,
+          collection,
         });
       }
 

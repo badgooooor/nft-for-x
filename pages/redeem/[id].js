@@ -11,16 +11,29 @@ import { useRouter } from "next/router";
 
 const Home = () => {
   const router = useRouter();
-  const { id: nftForXAddress } = router.query;
+  const { id } = router.query;
 
   const { account, isAuthenticated, Moralis, isWeb3Enabled } = useMoralis();
 
+  const [campaignAddr, setCampaignAddr] = useState(
+    process.env.NEXT_PUBLIC_NFTFORX_ADDRESS
+  );
+  const [collectionAddr, setCollectionAddr] = useState(
+    process.env.NEXT_PUBLIC_NFTMOCK_ADDRESS
+  );
   const [userNFTs, setUserNFTs] = useState([]);
   const [userRedeemeds, setUserRedeemeds] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedTokenId, setSelectedTokenId] = useState();
   const [isTokenApproved, setIsTokenApproved] = useState(false);
   const [isApprovalLoading, setIsApprovalLoading] = useState(false);
+
+  useEffect(() => {
+    if (id) {
+      setCampaignAddr(id);
+      getCollection();
+    }
+  }, [id]);
 
   useEffect(() => {
     if (!isWeb3Enabled) enableWeb3();
@@ -39,9 +52,21 @@ const Home = () => {
     await Moralis.enableWeb3();
   }
 
+  async function getCollection() {
+    if (!isWeb3Enabled) await enableWeb3();
+
+    const collection = await Moralis.executeFunction({
+      contractAddress: campaignAddr,
+      functionName: "collection",
+      abi: NFTForX.abi,
+    });
+
+    setCollectionAddr(collection);
+  }
+
   async function getTokenMetaData(tokenId) {
     const tokenURI = await Moralis.executeFunction({
-      contractAddress: process.env.NEXT_PUBLIC_NFTMOCK_ADDRESS,
+      contractAddress: collectionAddr,
       functionName: "tokenURI",
       abi: MockNFT.abi,
       params: {
@@ -61,7 +86,7 @@ const Home = () => {
 
     const balance = Number.parseInt(
       await Moralis.executeFunction({
-        contractAddress: process.env.NEXT_PUBLIC_NFTMOCK_ADDRESS,
+        contractAddress: collectionAddr,
         functionName: "balanceOf",
         abi: MockNFT.abi,
         params: {
@@ -73,7 +98,7 @@ const Home = () => {
     let tempUserNFTs = [];
     for (let i = 0; i < balance; i++) {
       const tokenId = await Moralis.executeFunction({
-        contractAddress: process.env.NEXT_PUBLIC_NFTMOCK_ADDRESS,
+        contractAddress: collectionAddr,
         functionName: "tokenOfOwnerByIndex",
         abi: MockNFT.abi,
         params: {
@@ -95,7 +120,7 @@ const Home = () => {
     if (!isWeb3Enabled) await enableWeb3();
 
     const userRedeems = await Moralis.executeFunction({
-      contractAddress: process.env.NEXT_PUBLIC_NFTFORX_ADDRESS,
+      contractAddress: campaignAddr,
       functionName: "getUserRedeem",
       abi: NFTForX.abi,
       params: {
@@ -104,7 +129,7 @@ const Home = () => {
     });
 
     const userRedeemOptions = await Moralis.executeFunction({
-      contractAddress: process.env.NEXT_PUBLIC_NFTFORX_ADDRESS,
+      contractAddress: campaignAddr,
       functionName: "getUserRedeemOption",
       abi: NFTForX.abi,
       params: {
@@ -137,7 +162,7 @@ const Home = () => {
 
     try {
       await Moralis.executeFunction({
-        contractAddress: nftForXAddress,
+        contractAddress: campaignAddr,
         functionName: "redeem",
         abi: NFTForX.abi,
         params: {
@@ -153,6 +178,7 @@ const Home = () => {
       setIsApprovalLoading(false);
     } catch (error) {
       console.log(error.message || error);
+      setIsApprovalLoading(false);
     }
   }
 
@@ -162,7 +188,7 @@ const Home = () => {
 
     try {
       const result = await Moralis.executeFunction({
-        contractAddress: process.env.NEXT_PUBLIC_NFTMOCK_ADDRESS,
+        contractAddress: collectionAddr,
         functionName: "getApproved",
         abi: MockNFT.abi,
         params: {
@@ -170,7 +196,7 @@ const Home = () => {
         },
       });
 
-      setIsTokenApproved(result === process.env.NEXT_PUBLIC_NFTFORX_ADDRESS);
+      setIsTokenApproved(result === campaignAddr);
     } catch (error) {
       console.log(error.message || error);
     }
@@ -182,11 +208,11 @@ const Home = () => {
 
     try {
       await Moralis.executeFunction({
-        contractAddress: process.env.NEXT_PUBLIC_NFTMOCK_ADDRESS,
+        contractAddress: collectionAddr,
         functionName: "approve",
         abi: MockNFT.abi,
         params: {
-          to: process.env.NEXT_PUBLIC_NFTFORX_ADDRESS,
+          to: campaignAddr,
           tokenId: selectedTokenId,
         },
       });
@@ -196,6 +222,7 @@ const Home = () => {
       setIsApprovalLoading(false);
     } catch (error) {
       console.log(error.message || error);
+      setIsApprovalLoading(false);
     }
   }
 
