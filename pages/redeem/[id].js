@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
-import { useMoralis } from "react-moralis";
+import { useEffect, useState } from 'react';
+import { useMoralis } from 'react-moralis';
+import { useRouter } from 'next/router';
 
-import MockNFT from "../../src/artifacts/contracts/mock/MockNFT.sol/MockNFT.json";
-import NFTForX from "../../src/artifacts/contracts/NFTForX.sol/NFTForX.json";
+import MockNFT from '../../src/artifacts/contracts/mock/MockNFT.sol/MockNFT.json';
+import NFTForX from '../../src/artifacts/contracts/NFTForX.sol/NFTForX.json';
 
-import NFTRedeemCard from "../../components/campaign/NFTRedeemCard";
-import OptionModal from "../../components/Modal/OptionModal";
-import NFTRedeemedCard from "../../components/redeem/NFTRedeemedCard";
-import { useRouter } from "next/router";
+import NFTRedeemableCard from '../../components/redeem/NFTRedeemableCard';
+import OptionModal from '../../components/Modal/OptionModal';
+import NFTRedeemedCard from '../../components/redeem/NFTRedeemedCard';
+import UserTokenContainer from '../../components/redeem/UserTokenContainer';
+import RedeemedTokenContainer from '../../components/redeem/RedeemedTokenContainer';
 
 const Home = () => {
   const router = useRouter();
@@ -15,18 +17,16 @@ const Home = () => {
 
   const { account, isAuthenticated, Moralis, isWeb3Enabled } = useMoralis();
 
-  const [campaignAddr, setCampaignAddr] = useState(
-    process.env.NEXT_PUBLIC_NFTFORX_ADDRESS
-  );
-  const [collectionAddr, setCollectionAddr] = useState(
-    process.env.NEXT_PUBLIC_NFTMOCK_ADDRESS
-  );
+  const [campaignAddr, setCampaignAddr] = useState(process.env.NEXT_PUBLIC_NFTFORX_ADDRESS);
+  const [collectionAddr, setCollectionAddr] = useState(process.env.NEXT_PUBLIC_NFTMOCK_ADDRESS);
   const [userNFTs, setUserNFTs] = useState([]);
   const [userRedeemeds, setUserRedeemeds] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedTokenId, setSelectedTokenId] = useState();
   const [isTokenApproved, setIsTokenApproved] = useState(false);
-  const [isApprovalLoading, setIsApprovalLoading] = useState(false);
+  const [isModalLoading, setisModalLoading] = useState(false);
+  const [userNftLoading, setUserNFTLoading] = useState(false);
+  const [userRedeemsLoading, setUserRedeemsLoading] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -57,7 +57,7 @@ const Home = () => {
 
     const collection = await Moralis.executeFunction({
       contractAddress: campaignAddr,
-      functionName: "collection",
+      functionName: 'collection',
       abi: NFTForX.abi,
     });
 
@@ -67,15 +67,15 @@ const Home = () => {
   async function getTokenMetaData(tokenId) {
     const tokenURI = await Moralis.executeFunction({
       contractAddress: collectionAddr,
-      functionName: "tokenURI",
+      functionName: 'tokenURI',
       abi: MockNFT.abi,
       params: {
         tokenId: tokenId,
       },
     });
 
-    let data = tokenURI.split(",")[1];
-    let buff = Buffer.from(data, "base64");
+    let data = tokenURI.split(',')[1];
+    let buff = Buffer.from(data, 'base64');
     let text = buff.toString();
     return JSON.parse(text);
   }
@@ -83,11 +83,12 @@ const Home = () => {
   async function getUserNFTs() {
     if (!account) return;
     if (!isWeb3Enabled) await enableWeb3();
+    setUserNFTLoading(true);
 
     const balance = Number.parseInt(
       await Moralis.executeFunction({
         contractAddress: collectionAddr,
-        functionName: "balanceOf",
+        functionName: 'balanceOf',
         abi: MockNFT.abi,
         params: {
           owner: account,
@@ -99,7 +100,7 @@ const Home = () => {
     for (let i = 0; i < balance; i++) {
       const tokenId = await Moralis.executeFunction({
         contractAddress: collectionAddr,
-        functionName: "tokenOfOwnerByIndex",
+        functionName: 'tokenOfOwnerByIndex',
         abi: MockNFT.abi,
         params: {
           owner: account,
@@ -113,15 +114,18 @@ const Home = () => {
     }
 
     setUserNFTs([...tempUserNFTs]);
+    setUserNFTLoading(false);
   }
 
   async function getUserRedeemeds() {
     if (!account) return;
     if (!isWeb3Enabled) await enableWeb3();
 
+    setUserRedeemsLoading(true);
+
     const userRedeems = await Moralis.executeFunction({
       contractAddress: campaignAddr,
-      functionName: "getUserRedeem",
+      functionName: 'getUserRedeem',
       abi: NFTForX.abi,
       params: {
         userAddr: account,
@@ -130,7 +134,7 @@ const Home = () => {
 
     const userRedeemOptions = await Moralis.executeFunction({
       contractAddress: campaignAddr,
-      functionName: "getUserRedeemOption",
+      functionName: 'getUserRedeemOption',
       abi: NFTForX.abi,
       params: {
         userAddr: account,
@@ -148,6 +152,7 @@ const Home = () => {
     }
 
     setUserRedeemeds([...tempArr]);
+    setUserRedeemsLoading(false);
   }
 
   async function openRedeem(tokenId) {
@@ -158,12 +163,12 @@ const Home = () => {
 
   async function redeem(optionIndex) {
     if (!isWeb3Enabled) await enableWeb3();
-    setIsApprovalLoading(true);
+    setisModalLoading(true);
 
     try {
       await Moralis.executeFunction({
         contractAddress: campaignAddr,
-        functionName: "redeem",
+        functionName: 'redeem',
         abi: NFTForX.abi,
         params: {
           tokenId: selectedTokenId,
@@ -174,11 +179,11 @@ const Home = () => {
       getUserNFTs();
       getUserRedeemeds();
 
-      alert("Successfully redeemed");
-      setIsApprovalLoading(false);
+      alert('Successfully redeemed');
+      setisModalLoading(false);
     } catch (error) {
       console.log(error.message || error);
-      setIsApprovalLoading(false);
+      setisModalLoading(false);
     }
   }
 
@@ -189,7 +194,7 @@ const Home = () => {
     try {
       const result = await Moralis.executeFunction({
         contractAddress: collectionAddr,
-        functionName: "getApproved",
+        functionName: 'getApproved',
         abi: MockNFT.abi,
         params: {
           tokenId: selectedTokenId,
@@ -204,12 +209,12 @@ const Home = () => {
 
   async function approve() {
     if (!isWeb3Enabled) await enableWeb3();
-    setIsApprovalLoading(true);
+    setisModalLoading(true);
 
     try {
       await Moralis.executeFunction({
         contractAddress: collectionAddr,
-        functionName: "approve",
+        functionName: 'approve',
         abi: MockNFT.abi,
         params: {
           to: campaignAddr,
@@ -219,19 +224,17 @@ const Home = () => {
 
       await getTokenApproval();
 
-      setIsApprovalLoading(false);
+      setisModalLoading(false);
     } catch (error) {
       console.log(error.message || error);
-      setIsApprovalLoading(false);
+      setisModalLoading(false);
     }
   }
 
   if (!isAuthenticated) {
     return (
-      <div className="px-8 py-4 pt-8">
-        <div className="font-bold text-2xl mb-2">
-          Please Connect Your Wallet
-        </div>
+      <div className='px-8 py-4 pt-8'>
+        <div className='font-bold text-2xl mb-2'>Please Connect Your Wallet</div>
       </div>
     );
   }
@@ -245,36 +248,42 @@ const Home = () => {
         redeem={redeem}
         approve={approve}
         isTokenApproved={isTokenApproved}
-        isApprovalLoading={isApprovalLoading}
+        isModalLoading={isModalLoading}
       />
 
-      <div className="mb-4">
-        <div className="font-bold text-2xl mb-2">Choose token to redeem</div>
-
-        <div className="grid sm:grid-cols-4 grid-cols-2 gap-4">
-          {userNFTs.map(({ tokenId, image }) => (
-            <NFTRedeemCard
-              key={tokenId}
-              tokenId={tokenId}
-              openRedeem={openRedeem}
-              imgSrc={image}
-            />
-          ))}
-        </div>
+      <div className='mb-4'>
+        <div className='font-bold text-2xl mb-2'>Choose token to redeem</div>
+        <UserTokenContainer>
+          {userNftLoading ? (
+            <div className='text-xl mb-2'>Loading... user's token</div>
+          ) : userNFTs.length === 0 ? (
+            <div className='text-xl mb-2'>You don't have any token.</div>
+          ) : (
+            userNFTs.map(({ tokenId, image }) => (
+              <NFTRedeemableCard
+                key={tokenId}
+                tokenId={tokenId}
+                openRedeem={openRedeem}
+                imgSrc={image}
+              />
+            ))
+          )}
+        </UserTokenContainer>
       </div>
 
-      <div className="mb-4">
-        <div className="font-bold text-2xl mb-2">Redeemed Items</div>
-        <div className="grid sm:grid-cols-4 grid-cols-2 gap-4">
-          {userRedeemeds.map(({ tokenId, optionId, image }) => (
-            <NFTRedeemedCard
-              key={tokenId}
-              tokenId={tokenId}
-              optionId={optionId}
-              imgSrc={image}
-            />
-          ))}
-        </div>
+      <div className='mb-4'>
+        <div className='font-bold text-2xl mb-2'>Redeemed Items</div>
+        <RedeemedTokenContainer>
+          {userRedeemsLoading ? (
+            <div className='text-xl mb-2'>Loading... user's redeemed items</div>
+          ) : userRedeemeds.length === 0 ? (
+            <div className='w-full text-xl mb-2'>You don't have any redeemed item.</div>
+          ) : (
+            userRedeemeds.map(({ tokenId, optionId, image }) => (
+              <NFTRedeemedCard key={tokenId} tokenId={tokenId} optionId={optionId} imgSrc={image} />
+            ))
+          )}
+        </RedeemedTokenContainer>
       </div>
     </div>
   );
