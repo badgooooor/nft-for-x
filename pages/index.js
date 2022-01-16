@@ -8,6 +8,7 @@ const Home = () => {
       <div className="text-center">
         <Tilt>
           <Image
+            className="mt-4"
             src={"/logo/brand-full.png"}
             alt="full-logo"
             height={120}
