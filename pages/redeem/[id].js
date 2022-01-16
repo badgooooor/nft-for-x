@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
-import { useMoralis } from "react-moralis";
+import { useEffect, useState } from 'react';
+import { useMoralis } from 'react-moralis';
 
-import MockNFT from "../../src/artifacts/contracts/mock/MockNFT.sol/MockNFT.json";
-import NFTForX from "../../src/artifacts/contracts/NFTForX.sol/NFTForX.json";
+import MockNFT from '../../src/artifacts/contracts/mock/MockNFT.sol/MockNFT.json';
+import NFTForX from '../../src/artifacts/contracts/NFTForX.sol/NFTForX.json';
 
-import NFTRedeemCard from "../../components/campaign/NFTRedeemCard";
-import OptionModal from "../../components/Modal/OptionModal";
-import NFTRedeemedCard from "../../components/redeem/NFTRedeemedCard";
-import { useRouter } from "next/router";
+import NFTRedeemCard from '../../components/campaign/NFTRedeemCard';
+import OptionModal from '../../components/Modal/OptionModal';
+import NFTRedeemedCard from '../../components/redeem/NFTRedeemedCard';
+import { useRouter } from 'next/router';
 
 const Home = () => {
   const router = useRouter();
@@ -15,12 +15,8 @@ const Home = () => {
 
   const { account, isAuthenticated, Moralis, isWeb3Enabled } = useMoralis();
 
-  const [campaignAddr, setCampaignAddr] = useState(
-    process.env.NEXT_PUBLIC_NFTFORX_ADDRESS
-  );
-  const [collectionAddr, setCollectionAddr] = useState(
-    process.env.NEXT_PUBLIC_NFTMOCK_ADDRESS
-  );
+  const [campaignAddr, setCampaignAddr] = useState(process.env.NEXT_PUBLIC_NFTFORX_ADDRESS);
+  const [collectionAddr, setCollectionAddr] = useState(process.env.NEXT_PUBLIC_NFTMOCK_ADDRESS);
   const [userNFTs, setUserNFTs] = useState([]);
   const [userRedeemeds, setUserRedeemeds] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -57,7 +53,7 @@ const Home = () => {
 
     const collection = await Moralis.executeFunction({
       contractAddress: campaignAddr,
-      functionName: "collection",
+      functionName: 'collection',
       abi: NFTForX.abi,
     });
 
@@ -67,15 +63,15 @@ const Home = () => {
   async function getTokenMetaData(tokenId) {
     const tokenURI = await Moralis.executeFunction({
       contractAddress: collectionAddr,
-      functionName: "tokenURI",
+      functionName: 'tokenURI',
       abi: MockNFT.abi,
       params: {
         tokenId: tokenId,
       },
     });
 
-    let data = tokenURI.split(",")[1];
-    let buff = Buffer.from(data, "base64");
+    let data = tokenURI.split(',')[1];
+    let buff = Buffer.from(data, 'base64');
     let text = buff.toString();
     return JSON.parse(text);
   }
@@ -87,7 +83,7 @@ const Home = () => {
     const balance = Number.parseInt(
       await Moralis.executeFunction({
         contractAddress: collectionAddr,
-        functionName: "balanceOf",
+        functionName: 'balanceOf',
         abi: MockNFT.abi,
         params: {
           owner: account,
@@ -99,7 +95,7 @@ const Home = () => {
     for (let i = 0; i < balance; i++) {
       const tokenId = await Moralis.executeFunction({
         contractAddress: collectionAddr,
-        functionName: "tokenOfOwnerByIndex",
+        functionName: 'tokenOfOwnerByIndex',
         abi: MockNFT.abi,
         params: {
           owner: account,
@@ -121,7 +117,7 @@ const Home = () => {
 
     const userRedeems = await Moralis.executeFunction({
       contractAddress: campaignAddr,
-      functionName: "getUserRedeem",
+      functionName: 'getUserRedeem',
       abi: NFTForX.abi,
       params: {
         userAddr: account,
@@ -130,7 +126,7 @@ const Home = () => {
 
     const userRedeemOptions = await Moralis.executeFunction({
       contractAddress: campaignAddr,
-      functionName: "getUserRedeemOption",
+      functionName: 'getUserRedeemOption',
       abi: NFTForX.abi,
       params: {
         userAddr: account,
@@ -163,7 +159,7 @@ const Home = () => {
     try {
       await Moralis.executeFunction({
         contractAddress: campaignAddr,
-        functionName: "redeem",
+        functionName: 'redeem',
         abi: NFTForX.abi,
         params: {
           tokenId: selectedTokenId,
@@ -174,7 +170,7 @@ const Home = () => {
       getUserNFTs();
       getUserRedeemeds();
 
-      alert("Successfully redeemed");
+      alert('Successfully redeemed');
       setIsApprovalLoading(false);
     } catch (error) {
       console.log(error.message || error);
@@ -189,7 +185,7 @@ const Home = () => {
     try {
       const result = await Moralis.executeFunction({
         contractAddress: collectionAddr,
-        functionName: "getApproved",
+        functionName: 'getApproved',
         abi: MockNFT.abi,
         params: {
           tokenId: selectedTokenId,
@@ -209,7 +205,7 @@ const Home = () => {
     try {
       await Moralis.executeFunction({
         contractAddress: collectionAddr,
-        functionName: "approve",
+        functionName: 'approve',
         abi: MockNFT.abi,
         params: {
           to: campaignAddr,
@@ -228,10 +224,8 @@ const Home = () => {
 
   if (!isAuthenticated) {
     return (
-      <div className="px-8 py-4 pt-8">
-        <div className="font-bold text-2xl mb-2">
-          Please Connect Your Wallet
-        </div>
+      <div className='px-8 py-4 pt-8'>
+        <div className='font-bold text-2xl mb-2'>Please Connect Your Wallet</div>
       </div>
     );
   }
@@ -248,31 +242,21 @@ const Home = () => {
         isApprovalLoading={isApprovalLoading}
       />
 
-      <div className="mb-4">
-        <div className="font-bold text-2xl mb-2">Choose token to redeem</div>
+      <div className='mb-4'>
+        <div className='font-bold text-2xl mb-2'>Choose token to redeem</div>
 
-        <div className="grid sm:grid-cols-4 grid-cols-2 gap-4">
+        <div className='grid sm:grid-cols-4 grid-cols-2 gap-4 bg-white-pink rounded border-light-pink p-4'>
           {userNFTs.map(({ tokenId, image }) => (
-            <NFTRedeemCard
-              key={tokenId}
-              tokenId={tokenId}
-              openRedeem={openRedeem}
-              imgSrc={image}
-            />
+            <NFTRedeemCard key={tokenId} tokenId={tokenId} openRedeem={openRedeem} imgSrc={image} />
           ))}
         </div>
       </div>
 
-      <div className="mb-4">
-        <div className="font-bold text-2xl mb-2">Redeemed Items</div>
-        <div className="grid sm:grid-cols-4 grid-cols-2 gap-4">
+      <div className='mb-4'>
+        <div className='font-bold text-2xl mb-2'>Redeemed Items</div>
+        <div className='grid sm:grid-cols-4 grid-cols-2 gap-4'>
           {userRedeemeds.map(({ tokenId, optionId, image }) => (
-            <NFTRedeemedCard
-              key={tokenId}
-              tokenId={tokenId}
-              optionId={optionId}
-              imgSrc={image}
-            />
+            <NFTRedeemedCard key={tokenId} tokenId={tokenId} optionId={optionId} imgSrc={image} />
           ))}
         </div>
       </div>
