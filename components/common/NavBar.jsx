@@ -14,7 +14,6 @@ const NavBar = () => {
         </Link>
       </div>
       <div className='flex flex-row justify-end items-center'>
-        <MintMockButton />
         <SwitchButton />
         <Account />
       </div>

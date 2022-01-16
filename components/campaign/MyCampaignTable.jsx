@@ -6,19 +6,16 @@ import { myCampaignState } from "../../lib/states";
 
 const Row = ({ campaignName, redeemCount, campaignAddr, nft }) => {
   return (
-    <tr>
-      <td className="py-4 whitespace-nowrap">
-        <div className="flex items-center">
-          <div className="flex-shrink-0 w-10 h-10"></div>
-          <div className="ml-4">
-            <div className="text-sm font-medium text-gray-900">
-              {campaignName}
-            </div>
-          </div>
-        </div>
+    <tr className="w-full">
+      <td className="px-6 py-3">
+        <div className="text-sm font-medium text-gray-900">{campaignName}</div>
       </td>
-      <td className="px-6 py-4 whitespace-nowrap">{campaignAddr}</td>
-      <td className="px-6 py-4 whitespace-nowrap">{redeemCount}</td>
+      <td scope="col" className="px-6 py-3">
+        <div className="text-sm font-medium text-gray-900">{campaignAddr}</div>
+      </td>
+      <td scope="col" className="px-6 py-3">
+        <div className="text-sm font-medium text-gray-900">{redeemCount}</div>
+      </td>
     </tr>
   );
 };
@@ -61,7 +58,7 @@ const MyCampaignTable = () => {
 
   return (
     <div className="overflow-hidden border-b border-gray-200 shadow sm:rounded-lg">
-      <table className="w-full divide-y divide-gray-200">
+      <table className="w-full table-auto">
         <thead className="bg-gray-50">
           <tr>
             <th
@@ -84,9 +81,7 @@ const MyCampaignTable = () => {
             </th>
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
-          {renderCampaigns()}
-        </tbody>
+        {renderCampaigns()}
       </table>
     </div>
   );
