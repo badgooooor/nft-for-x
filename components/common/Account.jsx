@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useMoralis } from "react-moralis";
+import { shortenAddr } from "../../utils/shortenAddr";
 
 export default function Account() {
   const { Moralis, isAuthenticated, authenticate, account, logout } =
@@ -26,10 +27,9 @@ export default function Account() {
 
   return (
     <div>
-      <p className="text-md px-2 py-2">{`${account.slice(
-        0,
-        6
-      )}...${account.slice(36)}`}</p>
+      <div className="rounded-full bg-light-blue px-2 text-md px-2 py-2">
+        User: {`${shortenAddr(account)}`}
+      </div>
     </div>
   );
 }

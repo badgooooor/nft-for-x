@@ -1,30 +1,26 @@
-import { useEffect, useState } from 'react';
-import { useMoralis } from 'react-moralis';
+import { useEffect, useState } from "react";
+import { useMoralis } from "react-moralis";
 
-import NFTRedeemCard from '../components/campaign/NFTRedeemCard';
-import OptionModal from '../components/Modal/OptionModal';
-import MockNFT from '../src/artifacts/contracts/mock/MockNFT.sol/MockNFT.json';
-import NFTForX from '../src/artifacts/contracts/NFTForX.sol/NFTForX.json';
+import NFTRedeemCard from "../components/campaign/NFTRedeemCard";
+import OptionModal from "../components/Modal/OptionModal";
+import MockNFT from "../src/artifacts/contracts/mock/MockNFT.sol/MockNFT.json";
+import NFTForX from "../src/artifacts/contracts/NFTForX.sol/NFTForX.json";
 
 function HistoryItem({ tokenId }) {
   return (
     <div>
-      <div className='max-w-sm rounded shadow-lg'>
+      <div className="max-w-sm rounded shadow-lg">
         <img
-          className='w-full'
-          src='https://images-ext-1.discordapp.net/external/1Y9ri4gBB0Ak1Zm2seQMTzavd6XDXpMO5RRzhqWbu8Y/https/gateway.pinata.cloud/ipfs/QmNTtzrUyifb9NC2CnnYN44QZyRGvzJNGPhdmQr8BjHMwx'
-          alt='Historical Item'
+          className="w-full"
+          src="https://images-ext-1.discordapp.net/external/1Y9ri4gBB0Ak1Zm2seQMTzavd6XDXpMO5RRzhqWbu8Y/https/gateway.pinata.cloud/ipfs/QmNTtzrUyifb9NC2CnnYN44QZyRGvzJNGPhdmQr8BjHMwx"
+          alt="Historical Item"
         />
-        <div className='px-6 py-4'>
-          <div className='font-semibold text-xl mb-2'>Token #{tokenId}</div>
+        <div className="px-6 py-4">
+          <div className="font-semibold text-xl mb-2">Token #{tokenId}</div>
         </div>
       </div>
     </div>
   );
-}
-
-function HistoryContainer({ children }) {
-  return <div className='grid grid-cols-4 gap-4 mx-8'>{children}</div>;
 }
 
 const Home = () => {
@@ -51,7 +47,7 @@ const Home = () => {
   }, [selectedTokenId]);
 
   async function enableWeb3() {
-    console.log('enabling web3 ...');
+    console.log("enabling web3 ...");
     await Moralis.enableWeb3();
   }
 
@@ -62,7 +58,7 @@ const Home = () => {
     console.log(`Getting... NFT token IDs \naccount: ${account}`);
     const options = {
       contractAddress: process.env.NEXT_PUBLIC_NFTMOCK_ADDRESS,
-      functionName: 'balanceOf',
+      functionName: "balanceOf",
       abi: MockNFT.abi,
       params: {
         owner: account,
@@ -74,7 +70,7 @@ const Home = () => {
     for (let i = 0; i < balance; i++) {
       const tokenId = await Moralis.executeFunction({
         contractAddress: process.env.NEXT_PUBLIC_NFTMOCK_ADDRESS,
-        functionName: 'tokenOfOwnerByIndex',
+        functionName: "tokenOfOwnerByIndex",
         abi: MockNFT.abi,
         params: {
           owner: account,
@@ -84,15 +80,15 @@ const Home = () => {
 
       const tokenURI = await Moralis.executeFunction({
         contractAddress: process.env.NEXT_PUBLIC_NFTMOCK_ADDRESS,
-        functionName: 'tokenURI',
+        functionName: "tokenURI",
         abi: MockNFT.abi,
         params: {
           tokenId: tokenId,
         },
       });
 
-      let data = tokenURI.split(',')[1];
-      let buff = Buffer.from(data, 'base64');
+      let data = tokenURI.split(",")[1];
+      let buff = Buffer.from(data, "base64");
       let text = buff.toString();
       const metaData = JSON.parse(text);
 
@@ -123,7 +119,7 @@ const Home = () => {
     try {
       await Moralis.executeFunction({
         contractAddress: process.env.NEXT_PUBLIC_NFTFORX_ADDRESS,
-        functionName: 'redeem',
+        functionName: "redeem",
         abi: NFTForX.abi,
         params: {
           tokenId: selectedTokenId,
@@ -144,7 +140,7 @@ const Home = () => {
     try {
       const result = await Moralis.executeFunction({
         contractAddress: process.env.NEXT_PUBLIC_NFTMOCK_ADDRESS,
-        functionName: 'getApproved',
+        functionName: "getApproved",
         abi: MockNFT.abi,
         params: {
           tokenId: selectedTokenId,
@@ -165,7 +161,7 @@ const Home = () => {
     try {
       const result = await Moralis.executeFunction({
         contractAddress: process.env.NEXT_PUBLIC_NFTMOCK_ADDRESS,
-        functionName: 'approve',
+        functionName: "approve",
         abi: MockNFT.abi,
         params: {
           to: process.env.NEXT_PUBLIC_NFTFORX_ADDRESS,
@@ -184,8 +180,10 @@ const Home = () => {
 
   if (!isAuthenticated) {
     return (
-      <div className='px-8 py-4 pt-8'>
-        <div className='font-bold text-2xl mb-2'>Please Connect Your Wallet</div>
+      <div className="px-8 py-4 pt-8">
+        <div className="font-bold text-2xl mb-2">
+          Please Connect Your Wallet
+        </div>
       </div>
     );
   }
@@ -202,19 +200,24 @@ const Home = () => {
         isApprovalLoading={isApprovalLoading}
       />
 
-      <div className='mb-4'>
-        <div className='font-bold text-2xl mb-2'>Choose token to redeem</div>
+      <div className="mb-4">
+        <div className="font-bold text-2xl mb-2">Choose token to redeem</div>
 
-        <div className='grid sm:grid-cols-4 grid-cols-2 gap-4'>
+        <div className="grid sm:grid-cols-4 grid-cols-2 gap-4">
           {userNFTs.map(({ tokenId, image }) => (
-            <NFTRedeemCard key={tokenId} tokenId={tokenId} openRedeem={openRedeem} imgSrc={image} />
+            <NFTRedeemCard
+              key={tokenId}
+              tokenId={tokenId}
+              openRedeem={openRedeem}
+              imgSrc={image}
+            />
           ))}
         </div>
       </div>
 
-      <div className='mb-4'>
-        <div className='font-bold text-2xl mb-2'>Redeemed Items</div>
-        <div className='grid sm:grid-cols-4 grid-cols-2 gap-4'>
+      <div className="mb-4">
+        <div className="font-bold text-2xl mb-2">Redeemed Items</div>
+        <div className="grid sm:grid-cols-4 grid-cols-2 gap-4">
           {historyTransactions.map((tokenId) => (
             <HistoryItem key={tokenId} tokenId={tokenId} />
           ))}

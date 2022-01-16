@@ -1,4 +1,7 @@
+import Link from "next/link";
 import { useRecoilState } from "recoil";
+
+import useCampaignsByOwner from "../../hooks/useCampaignByOwner";
 import { myCampaignState } from "../../lib/states";
 
 const Row = ({ campaignName, redeemCount, items, nft }) => {
@@ -42,60 +45,76 @@ const Row = ({ campaignName, redeemCount, items, nft }) => {
 
 const MyCampaignTable = () => {
   const [campaigns] = useRecoilState(myCampaignState);
+  const { filteredCampaigns } = useCampaignsByOwner();
+
+  function renderCampaigns() {
+    if (filteredCampaigns.length > 0) {
+      return (
+        <tbody className="bg-white divide-y divide-gray-200">
+          {filteredCampaigns.map((campaign) => {
+            return (
+              <Row
+                key={campaign}
+                campaignName={campaign.campaignName}
+                redeemCount={campaign.redeemCount}
+                items={campaign.items}
+                nft={campaign.nft}
+              />
+            );
+          })}
+        </tbody>
+      );
+    } else {
+      return (
+        <tr>
+          <td colSpan={5} className="text-center p-8">
+            <div>
+              You didn&apos;t create any campaign,{" "}
+              <Link href="/campaign/new">
+                <a className="underline">Create new one here</a>
+              </Link>
+            </div>
+          </td>
+        </tr>
+      );
+    }
+  }
+
   return (
-    <div className="flex flex-col max-w-3xl">
-      <div className="-my-2 sm:-mx-6 lg:-mx-8">
-        <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-          <div className="overflow-hidden border-b border-gray-200 shadow sm:rounded-lg">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
-                  >
-                    Campaign Name
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
-                  >
-                    Redeem Count
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
-                  >
-                    Items
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
-                  >
-                    NFT
-                  </th>
-                  <th scope="col" className="relative px-6 py-3">
-                    <span className="sr-only">Edit</span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {campaigns.map((campaign) => {
-                  return (
-                    <Row
-                      key={campaign}
-                      campaignName={campaign.campaignName}
-                      redeemCount={campaign.redeemCount}
-                      items={campaign.items}
-                      nft={campaign.nft}
-                    />
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+    <div className="overflow-hidden border-b border-gray-200 shadow sm:rounded-lg">
+      <table className="w-full divide-y divide-gray-200">
+        <thead className="bg-gray-50">
+          <tr>
+            <th
+              scope="col"
+              className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
+            >
+              Campaign Name
+            </th>
+            <th
+              scope="col"
+              className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
+            >
+              Redeem Count
+            </th>
+            <th
+              scope="col"
+              className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
+            >
+              Items
+            </th>
+            <th
+              scope="col"
+              className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
+            >
+              NFT
+            </th>
+          </tr>
+        </thead>
+        <tbody className="bg-white divide-y divide-gray-200">
+          {renderCampaigns()}
+        </tbody>
+      </table>
     </div>
   );
 };
