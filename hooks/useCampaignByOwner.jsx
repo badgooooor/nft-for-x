@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import useCampaigns from "./useCampaigns";
 
 const useCampaignsByOwner = () => {
-  const { account, isWeb3Enabled } = useMoralis();
+  const { account, isWeb3Enabled, Moralis } = useMoralis();
   const { campaigns, loading: campaignLoading } = useCampaigns();
   const [filteredCampaigns, setFilteredCampaigns] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -16,7 +16,10 @@ const useCampaignsByOwner = () => {
   async function getFilteredCampaigns() {
     if (!isWeb3Enabled) await enableWeb3();
 
-    const filtered = campaigns.filter((campaign) => campaign.owner === account);
+    const filtered = campaigns.filter((campaign) => {
+      console.log("each", campaign.owner, account, campaign.owner === account);
+      return campaign.owner.toLowerCase() === account.toLowerCase();
+    });
     setFilteredCampaigns(filtered);
   }
 
