@@ -67,30 +67,50 @@ export default function OptionModal({
     setSelectedItem(null);
   }
 
+  if (!showModal) return '';
+
   return (
     <>
-      {showModal ? (
-        <>
-          <div className='justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none'>
-            <div className='relative w-auto my-6 mx-auto max-w-5xl'>
-              {/*content*/}
-              <div className='border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none'>
-                {/*header*/}
-                <div className='flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t'>
-                  <h3 className='text-3xl font-semibold'>Redeem an item</h3>
-                </div>
-                {/*body*/}
-                <div className='relative p-6 flex-auto'>
-                  <div className='font-bold text-2xl mb-2'>Selected Token #{tokenId}</div>
-                  <div className='max-w-xs rounded shadow-lg mb-4'>
-                    <img
-                      className='max-w-xs'
-                      src='https://gateway.pinata.cloud/ipfs/QmX8AsKPQEtURv9rykLodLXCs9PhsAtGycyZSQXN7TAFa5'
-                      alt='Historical Item'
-                    />
-                  </div>
+      <div
+        class='fixed z-10 inset-0 overflow-y-auto'
+        aria-labelledby='modal-title'
+        role='dialog'
+        aria-modal='true'
+      >
+        <div class='flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0'>
+          <div
+            class='fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity'
+            aria-hidden='true'
+          ></div>
 
-                  <div className='font-bold text-2xl mb-2'>Select your item</div>
+          <span class='hidden sm:inline-block sm:align-middle sm:h-screen' aria-hidden='true'>
+            &#8203;
+          </span>
+
+          <div class='inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle'>
+            <div class='bg-white px-4 pt-5 pb-4'>
+              <div class='sm:flex sm:items-start'>
+                <div class='mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left'>
+                  {/* START BODY */}
+                  <div className='mb-6'>
+                    <h3 class='font-bold text-3xl mb-2' id='modal-title'>
+                      Redeem your token
+                    </h3>
+
+                    <h3 class='font-bold text-2xl mb-2' id='modal-title'>
+                      Your token (#{tokenId})
+                    </h3>
+                    <div class='mt-2'>
+                      <img
+                        className='max-w-xs'
+                        src='https://gateway.pinata.cloud/ipfs/QmX8AsKPQEtURv9rykLodLXCs9PhsAtGycyZSQXN7TAFa5'
+                        alt='Historical Item'
+                      />
+                    </div>
+                  </div>
+                  <h3 class='font-bold text-2xl mb-2' id='modal-title'>
+                    Select an item to redeem
+                  </h3>
                   <div className='grid grid-cols-3 gap-4'>
                     {optionItems.map((optionId) => (
                       <OptionItem
@@ -100,47 +120,47 @@ export default function OptionModal({
                       />
                     ))}
                   </div>
-                </div>
-                {/*footer*/}
-                <div className='flex items-center justify-end px-6 py-2 border-t border-solid border-blueGray-200 rounded-b'>
-                  <button
-                    className='hover:bg-black-100 text-red-500 font-medium rounded-md px-8 py-2'
-                    type='button'
-                    onClick={() => {
-                      setShowModal(false);
-                      setSelectedItem(null);
-                    }}
-                  >
-                    Cancel
-                  </button>
-                  {isTokenApproved ? (
-                    <button
-                      className='bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md px-8 py-2'
-                      type='button'
-                      onClick={() => {
-                        if (!isModalLoading) redeemItem();
-                      }}
-                    >
-                      {isModalLoading ? 'Loading...' : 'Redeem'}
-                    </button>
-                  ) : (
-                    <button
-                      className='bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md px-8 py-2'
-                      type='button'
-                      onClick={() => {
-                        if (!isModalLoading) approve();
-                      }}
-                    >
-                      {isModalLoading ? 'Loading...' : 'Approve'}
-                    </button>
-                  )}
+
+                  {/* END BODY */}
                 </div>
               </div>
             </div>
+            <div class='bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse'>
+              <button
+                className='hover:bg-black-100 text-red-500 font-medium rounded-md px-8 py-2'
+                type='button'
+                onClick={() => {
+                  setShowModal(false);
+                  setSelectedItem(null);
+                }}
+              >
+                Cancel
+              </button>
+              {isTokenApproved ? (
+                <button
+                  className='bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md px-8 py-2'
+                  type='button'
+                  onClick={() => {
+                    if (!isModalLoading) redeemItem();
+                  }}
+                >
+                  {isModalLoading ? 'Loading...' : 'Redeem'}
+                </button>
+              ) : (
+                <button
+                  className='bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md px-8 py-2'
+                  type='button'
+                  onClick={() => {
+                    if (!isModalLoading) approve();
+                  }}
+                >
+                  {isModalLoading ? 'Loading...' : 'Approve'}
+                </button>
+              )}
+            </div>
           </div>
-          <div className='opacity-25 fixed inset-0 z-40 bg-black'></div>
-        </>
-      ) : null}
+        </div>
+      </div>
     </>
   );
 }
