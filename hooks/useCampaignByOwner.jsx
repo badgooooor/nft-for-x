@@ -1,9 +1,9 @@
 import { useMoralis } from "react-moralis";
-import { useEffect, useState } from "react/cjs/react.development";
+import { useEffect, useState } from "react";
 import useCampaigns from "./useCampaigns";
 
 const useCampaignsByOwner = () => {
-  const { account } = useMoralis();
+  const { account, isWeb3Enabled } = useMoralis();
   const { campaigns, loading: campaignLoading } = useCampaigns();
   const [filteredCampaigns, setFilteredCampaigns] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -13,9 +13,15 @@ const useCampaignsByOwner = () => {
     await Moralis.enableWeb3();
   }
 
-  useEffect(() => {
+  async function getFilteredCampaigns() {
+    if (!isWeb3Enabled) await enableWeb3();
+
     const filtered = campaigns.filter((campaign) => campaign.owner === account);
     setFilteredCampaigns(filtered);
+  }
+
+  useEffect(() => {
+    getFilteredCampaigns();
   }, [campaignLoading]);
 
   return { filteredCampaigns, loading };
