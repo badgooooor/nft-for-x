@@ -3,7 +3,7 @@ import Tilt from 'react-parallax-tilt';
 const NFTRedeemCard = ({ tokenId, imgSrc, openRedeem }) => {
   return (
     <Tilt>
-      <div className='max-w-sm rounded-sm shadow-lg bg-white'>
+      <div className='max-w-sm rounded-md shadow-lg bg-white'>
         <div>
           <img
             className='w-full h-72 object-cover rounded-t-sm'
