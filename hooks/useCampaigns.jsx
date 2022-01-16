@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import { useMoralis } from "react-moralis";
+import { useEffect, useState } from 'react';
+import { useMoralis } from 'react-moralis';
 
-import NFTForXFactory from "../src/artifacts/contracts/NFTForXFactory.sol/NFTForXFactory.json";
-import NFTForX from "../src/artifacts/contracts/NFTForX.sol/NFTForX.json";
+import NFTForXFactory from '../src/artifacts/contracts/NFTForXFactory.sol/NFTForXFactory.json';
+import NFTForX from '../src/artifacts/contracts/NFTForX.sol/NFTForX.json';
 
 const useCampaigns = () => {
   const { Moralis, isWeb3Enabled } = useMoralis();
@@ -10,7 +10,7 @@ const useCampaigns = () => {
   const [campaigns, setCampaigns] = useState([]);
 
   async function enableWeb3() {
-    console.log("enabling web3 ...");
+    console.log('enabling web3 ...');
     await Moralis.enableWeb3();
   }
 
@@ -21,15 +21,15 @@ const useCampaigns = () => {
     try {
       const numberOfCampaigns = await Moralis.executeFunction({
         contractAddress: process.env.NEXT_PUBLIC_NFTFORX_FACTORY_ADDRESS,
-        functionName: "numberOfCampaigns",
+        functionName: 'numberOfCampaigns',
         abi: NFTForXFactory.abi,
       });
 
       const campaigns = [];
-      for (let i = 0; i < numberOfCampaigns; i++) {
+      for (let i = 4; i < numberOfCampaigns; i++) {
         const campaignAddr = await Moralis.executeFunction({
           contractAddress: process.env.NEXT_PUBLIC_NFTFORX_FACTORY_ADDRESS,
-          functionName: "getCampaign",
+          functionName: 'getCampaign',
           abi: NFTForXFactory.abi,
           params: {
             campaignId: i,
@@ -40,19 +40,19 @@ const useCampaigns = () => {
 
         const owner = await Moralis.executeFunction({
           contractAddress: campaignAddr,
-          functionName: "owner",
+          functionName: 'owner',
           abi: NFTForX.abi,
         });
 
         const collection = await Moralis.executeFunction({
           contractAddress: campaignAddr,
-          functionName: "collection",
+          functionName: 'collection',
           abi: NFTForX.abi,
         });
 
         const totalRedeemCount = await Moralis.executeFunction({
           contractAddress: campaignAddr,
-          functionName: "totalRedeemCount",
+          functionName: 'totalRedeemCount',
           abi: NFTForX.abi,
         });
 
