@@ -1,31 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useMoralis } from 'react-moralis';
 
-import NFTRedeemCard from '../components/campaign/NFTRedeemCard';
-import OptionModal from '../components/Modal/OptionModal';
 import MockNFT from '../src/artifacts/contracts/mock/MockNFT.sol/MockNFT.json';
 import NFTForX from '../src/artifacts/contracts/NFTForX.sol/NFTForX.json';
 
-function HistoryItem({ tokenId }) {
-  return (
-    <div>
-      <div className='max-w-sm rounded shadow-lg'>
-        <img
-          className='w-full'
-          src='https://images-ext-1.discordapp.net/external/1Y9ri4gBB0Ak1Zm2seQMTzavd6XDXpMO5RRzhqWbu8Y/https/gateway.pinata.cloud/ipfs/QmNTtzrUyifb9NC2CnnYN44QZyRGvzJNGPhdmQr8BjHMwx'
-          alt='Historical Item'
-        />
-        <div className='px-6 py-4'>
-          <div className='font-semibold text-xl mb-2'>Token #{tokenId}</div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function HistoryContainer({ children }) {
-  return <div className='grid grid-cols-4 gap-4 mx-8'>{children}</div>;
-}
+import NFTRedeemCard from '../components/campaign/NFTRedeemCard';
+import OptionModal from '../components/Modal/OptionModal';
+import NFTRedeemedCard from '../components/redeem/NFTRedeemedCard';
 
 const Home = () => {
   const { account, isAuthenticated, Moralis, isWeb3Enabled } = useMoralis();
@@ -105,7 +86,18 @@ const Home = () => {
     if (!isWeb3Enabled) await enableWeb3();
 
     console.log(`Getting... historical transactions \naccount: ${account}`);
-    setHistoryTransactions([1, 2, 3]);
+    setHistoryTransactions([
+      {
+        tokenId: 1,
+        imgSrc:
+          'https://images-ext-1.discordapp.net/external/1Y9ri4gBB0Ak1Zm2seQMTzavd6XDXpMO5RRzhqWbu8Y/https/gateway.pinata.cloud/ipfs/QmNTtzrUyifb9NC2CnnYN44QZyRGvzJNGPhdmQr8BjHMwx',
+      },
+      {
+        tokenId: 2,
+        imgSrc:
+          'https://images-ext-1.discordapp.net/external/1Y9ri4gBB0Ak1Zm2seQMTzavd6XDXpMO5RRzhqWbu8Y/https/gateway.pinata.cloud/ipfs/QmNTtzrUyifb9NC2CnnYN44QZyRGvzJNGPhdmQr8BjHMwx',
+      },
+    ]);
   }
 
   async function openRedeem(tokenId) {
@@ -215,8 +207,8 @@ const Home = () => {
       <div className='mb-4'>
         <div className='font-bold text-2xl mb-2'>Redeemed Items</div>
         <div className='grid sm:grid-cols-4 grid-cols-2 gap-4'>
-          {historyTransactions.map((tokenId) => (
-            <HistoryItem key={tokenId} tokenId={tokenId} />
+          {historyTransactions.map(({ tokenId, imgSrc }) => (
+            <NFTRedeemedCard key={tokenId} tokenId={tokenId} imgSrc={imgSrc} />
           ))}
         </div>
       </div>
