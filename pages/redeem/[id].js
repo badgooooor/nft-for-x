@@ -22,7 +22,8 @@ const Home = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedTokenId, setSelectedTokenId] = useState();
   const [isTokenApproved, setIsTokenApproved] = useState(false);
-  const [isApprovalLoading, setIsApprovalLoading] = useState(false);
+  const [isModalLoading, setisModalLoading] = useState(false);
+  const [redeemableLoading, setRedeemableLoading] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -154,7 +155,7 @@ const Home = () => {
 
   async function redeem(optionIndex) {
     if (!isWeb3Enabled) await enableWeb3();
-    setIsApprovalLoading(true);
+    setisModalLoading(true);
 
     try {
       await Moralis.executeFunction({
@@ -171,10 +172,10 @@ const Home = () => {
       getUserRedeemeds();
 
       alert('Successfully redeemed');
-      setIsApprovalLoading(false);
+      setisModalLoading(false);
     } catch (error) {
       console.log(error.message || error);
-      setIsApprovalLoading(false);
+      setisModalLoading(false);
     }
   }
 
@@ -200,7 +201,7 @@ const Home = () => {
 
   async function approve() {
     if (!isWeb3Enabled) await enableWeb3();
-    setIsApprovalLoading(true);
+    setisModalLoading(true);
 
     try {
       await Moralis.executeFunction({
@@ -215,10 +216,10 @@ const Home = () => {
 
       await getTokenApproval();
 
-      setIsApprovalLoading(false);
+      setisModalLoading(false);
     } catch (error) {
       console.log(error.message || error);
-      setIsApprovalLoading(false);
+      setisModalLoading(false);
     }
   }
 
@@ -239,7 +240,7 @@ const Home = () => {
         redeem={redeem}
         approve={approve}
         isTokenApproved={isTokenApproved}
-        isApprovalLoading={isApprovalLoading}
+        isModalLoading={isModalLoading}
       />
 
       <div className='mb-4'>
