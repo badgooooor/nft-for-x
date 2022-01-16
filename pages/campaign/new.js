@@ -159,14 +159,13 @@ const NewCampaignPage = () => {
           />
         </div>
       </div>
-      <div className="flex flex-col w-full p-4 mb-4 bg-white rounded-md shadow-lg">
-        <div className="text-xl font-bold">Create a new Campaign</div>
+      <div className="flex flex-col w-full p-4 mt-8 mb-4">
         <button
           onClick={createNewCampaign}
           className="self-center px-8 py-2 text-white duration-300 ease-in border-2 rounded-md w-96 bg-dark-slate-blue hover:bg-white hover:text-dark-slate-blue border-dark-slate-blue"
         >
           <div className="text-lg">
-            {loading ? `Loading...` : `Make Transaction`}
+            {loading ? `Loading...` : `Create a new Campaign`}
           </div>
         </button>
       </div>
