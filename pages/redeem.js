@@ -65,6 +65,7 @@ const Home = () => {
         },
       })
     );
+
     let tempUserNFTs = [];
     for (let i = 0; i < balance; i++) {
       const tokenId = await Moralis.executeFunction({
@@ -76,11 +77,10 @@ const Home = () => {
           index: String(i),
         },
       });
-
       const metaData = await getTokenMetaData(tokenId);
-
       tempUserNFTs.push({ tokenId, ...metaData });
     }
+
     setUserNFTs([...tempUserNFTs]);
   }
 
@@ -109,7 +109,6 @@ const Home = () => {
     let tempArr = [];
     for (let i = 0; i < userRedeems.length; i++) {
       const metaData = await getTokenMetaData(userRedeems[i]);
-
       tempArr.push({ tokenId: userRedeems[i], optionId: userRedeemOptions[i], ...metaData });
     }
 

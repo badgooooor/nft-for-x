@@ -1,20 +1,36 @@
 import { useEffect, useState } from 'react';
+import ImageCard from '../../components/campaign/ImageCard';
 
-function OptionItem({ optionIndex, setSelectedItem }) {
+function OptionItem({ optionId, setSelectedItem }) {
+  const imageData = {
+    0: {
+      src: '/collection/tshirt.jpg',
+      name: 'T Shirt',
+      description: 'Shirt engraved with awesomeness',
+    },
+    1: {
+      src: '/collection/hat.jpg',
+      name: 'Hat',
+      description: 'Hat showing how sultan you are',
+    },
+    2: {
+      src: '/collection/jacket.jpg',
+      name: 'Jacket',
+      description: 'Jacket that make you drip like rockstar',
+    },
+  };
+
   return (
     <div>
       <div className='max-w-xs rounded shadow-lg'>
-        <img
-          className='w-full'
-          src='https://images-ext-1.discordapp.net/external/1Y9ri4gBB0Ak1Zm2seQMTzavd6XDXpMO5RRzhqWbu8Y/https/gateway.pinata.cloud/ipfs/QmNTtzrUyifb9NC2CnnYN44QZyRGvzJNGPhdmQr8BjHMwx'
-          alt='Historical Item'
+        <ImageCard
+          src={imageData[optionId].src}
+          name={imageData[optionId].name}
+          description={imageData[optionId].description}
         />
-        <div className='px-6 py-4'>
-          <div className='font-semibold text-xl mb-2'>option #{optionIndex}</div>
-        </div>
         <input
           type='radio'
-          value={optionIndex}
+          value={optionId}
           name='option-radio'
           onClick={(e) => setSelectedItem(e.target.value)}
         />
@@ -41,7 +57,7 @@ export default function OptionModal({
 
   async function getOptionItems() {
     console.log(`Getting... option items of Token ID #${tokenId}`);
-    setOptionItems([1, 2, 3]);
+    setOptionItems([0, 1, 2]);
   }
 
   async function redeemItem() {
@@ -70,17 +86,17 @@ export default function OptionModal({
                   <div className='max-w-xs rounded shadow-lg mb-4'>
                     <img
                       className='max-w-xs'
-                      src='https://media.discordapp.net/attachments/929752477711073340/931745821056176168/tshirt.jpg'
+                      src='https://gateway.pinata.cloud/ipfs/QmX8AsKPQEtURv9rykLodLXCs9PhsAtGycyZSQXN7TAFa5'
                       alt='Historical Item'
                     />
                   </div>
 
                   <div className='font-bold text-2xl mb-2'>Options</div>
-                  <div className='grid grid-cols-4 gap-4'>
-                    {optionItems.map((optionIndex) => (
+                  <div className='grid grid-cols-3 gap-4'>
+                    {optionItems.map((optionId) => (
                       <OptionItem
-                        key={optionIndex}
-                        optionIndex={optionIndex}
+                        key={optionId}
+                        optionId={optionId}
                         setSelectedItem={setSelectedItem}
                       />
                     ))}
