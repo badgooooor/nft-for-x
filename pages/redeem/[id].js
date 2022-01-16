@@ -240,7 +240,7 @@ const Home = () => {
   }
 
   return (
-    <div>
+    <div className='mb-8'>
       <OptionModal
         showModal={showModal}
         setShowModal={setShowModal}
