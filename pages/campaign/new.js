@@ -166,15 +166,6 @@ const NewCampaignPage = () => {
           </div>
         </button>
       </div>
-      {/* <div className="w-full bg-white rounded-md flex flex-col p-4 mb-4 shadow-lg">
-        <div>
-          <div className="font-bold text-xl">Redeemable Item Amount</div>
-          <div className="font-light text-md mb-2">
-            Set available amount of items
-          </div>
-        </div>
-        <MaxRedeemableTable />
-      </div> */}
     </div>
   );
 };
