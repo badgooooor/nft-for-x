@@ -9,6 +9,7 @@ import OptionModal from '../../components/Modal/OptionModal';
 import NFTRedeemedCard from '../../components/redeem/NFTRedeemedCard';
 import { useRouter } from 'next/router';
 import UserTokenContainer from '../../components/redeem/UserTokenContainer';
+import RedeemedTokenContainer from '../../components/redeem/RedeemedTokenContainer';
 
 const Home = () => {
   const router = useRouter();
@@ -25,6 +26,7 @@ const Home = () => {
   const [isTokenApproved, setIsTokenApproved] = useState(false);
   const [isModalLoading, setisModalLoading] = useState(false);
   const [userNftLoading, setUserNFTLoading] = useState(false);
+  const [userRedeemsLoading, setUserRedeemsLoading] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -119,6 +121,8 @@ const Home = () => {
     if (!account) return;
     if (!isWeb3Enabled) await enableWeb3();
 
+    setUserRedeemsLoading(true);
+
     const userRedeems = await Moralis.executeFunction({
       contractAddress: campaignAddr,
       functionName: 'getUserRedeem',
@@ -148,6 +152,7 @@ const Home = () => {
     }
 
     setUserRedeemeds([...tempArr]);
+    setUserRedeemsLoading(false);
   }
 
   async function openRedeem(tokenId) {
@@ -269,11 +274,17 @@ const Home = () => {
 
       <div className='mb-4'>
         <div className='font-bold text-2xl mb-2'>Redeemed Items</div>
-        <div className='grid sm:grid-cols-4 grid-cols-2 gap-4'>
-          {userRedeemeds.map(({ tokenId, optionId, image }) => (
-            <NFTRedeemedCard key={tokenId} tokenId={tokenId} optionId={optionId} imgSrc={image} />
-          ))}
-        </div>
+        <RedeemedTokenContainer>
+          {userRedeemsLoading ? (
+            <div className='text-xl mb-2'>Loading... user's redeemed items</div>
+          ) : userNFTs.length === 0 ? (
+            <div className='w-full text-xl mb-2'>You don't have any redeemed item.</div>
+          ) : (
+            userRedeemeds.map(({ tokenId, optionId, image }) => (
+              <NFTRedeemedCard key={tokenId} tokenId={tokenId} optionId={optionId} imgSrc={image} />
+            ))
+          )}
+        </RedeemedTokenContainer>
       </div>
     </div>
   );
