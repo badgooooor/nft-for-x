@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
 import { useMoralis } from "react-moralis";
 
-import MockNFT from "../src/artifacts/contracts/mock/MockNFT.sol/MockNFT.json";
-import NFTForX from "../src/artifacts/contracts/NFTForX.sol/NFTForX.json";
+import MockNFT from "../../src/artifacts/contracts/mock/MockNFT.sol/MockNFT.json";
+import NFTForX from "../../src/artifacts/contracts/NFTForX.sol/NFTForX.json";
 
-import NFTRedeemCard from "../components/campaign/NFTRedeemCard";
-import OptionModal from "../components/Modal/OptionModal";
-import NFTRedeemedCard from "../components/redeem/NFTRedeemedCard";
+import NFTRedeemCard from "../../components/campaign/NFTRedeemCard";
+import OptionModal from "../../components/Modal/OptionModal";
+import NFTRedeemedCard from "../../components/redeem/NFTRedeemedCard";
+import { useRouter } from "next/router";
 
 const Home = () => {
+  const router = useRouter();
+  const { id: nftForXAddress } = router.query;
+
   const { account, isAuthenticated, Moralis, isWeb3Enabled } = useMoralis();
 
   const [userNFTs, setUserNFTs] = useState([]);
@@ -133,7 +137,7 @@ const Home = () => {
 
     try {
       await Moralis.executeFunction({
-        contractAddress: process.env.NEXT_PUBLIC_NFTFORX_ADDRESS,
+        contractAddress: nftForXAddress,
         functionName: "redeem",
         abi: NFTForX.abi,
         params: {
