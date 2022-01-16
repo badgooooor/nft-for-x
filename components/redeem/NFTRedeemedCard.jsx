@@ -1,6 +1,6 @@
 import Tilt from 'react-parallax-tilt';
 
-const NFTRedeemedCard = ({ tokenId, imgSrc }) => {
+const NFTRedeemedCard = ({ tokenId, optionId, imgSrc }) => {
   return (
     <Tilt>
       <div className='max-w-sm rounded-sm shadow-lg'>
@@ -12,7 +12,8 @@ const NFTRedeemedCard = ({ tokenId, imgSrc }) => {
           />
         </div>
         <div className='px-6 py-4'>
-          <div className='font-semibold text-xl mb-2'>Token #{tokenId}</div>
+          <div className='font-semibold text-xl mb-1'>Token #{tokenId}</div>
+          <div className='font-medium text-md mb-2'>Option #{optionId}</div>
         </div>
       </div>
     </Tilt>
