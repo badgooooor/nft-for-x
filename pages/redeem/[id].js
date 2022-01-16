@@ -8,6 +8,7 @@ import NFTRedeemCard from '../../components/campaign/NFTRedeemCard';
 import OptionModal from '../../components/Modal/OptionModal';
 import NFTRedeemedCard from '../../components/redeem/NFTRedeemedCard';
 import { useRouter } from 'next/router';
+import UserTokenContainer from '../../components/redeem/UserTokenContainer';
 
 const Home = () => {
   const router = useRouter();
@@ -23,7 +24,7 @@ const Home = () => {
   const [selectedTokenId, setSelectedTokenId] = useState();
   const [isTokenApproved, setIsTokenApproved] = useState(false);
   const [isModalLoading, setisModalLoading] = useState(false);
-  const [redeemableLoading, setRedeemableLoading] = useState(false);
+  const [userNftLoading, setUserNFTLoading] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -80,6 +81,7 @@ const Home = () => {
   async function getUserNFTs() {
     if (!account) return;
     if (!isWeb3Enabled) await enableWeb3();
+    setUserNFTLoading(true);
 
     const balance = Number.parseInt(
       await Moralis.executeFunction({
@@ -110,6 +112,7 @@ const Home = () => {
     }
 
     setUserNFTs([...tempUserNFTs]);
+    setUserNFTLoading(false);
   }
 
   async function getUserRedeemeds() {
@@ -246,11 +249,22 @@ const Home = () => {
       <div className='mb-4'>
         <div className='font-bold text-2xl mb-2'>Choose token to redeem</div>
 
-        <div className='grid sm:grid-cols-4 grid-cols-2 gap-4 bg-white-pink rounded border-light-pink p-4'>
-          {userNFTs.map(({ tokenId, image }) => (
-            <NFTRedeemCard key={tokenId} tokenId={tokenId} openRedeem={openRedeem} imgSrc={image} />
-          ))}
-        </div>
+        <UserTokenContainer>
+          {userNftLoading ? (
+            <div className='text-xl mb-2'>Loading... user's token</div>
+          ) : userNFTs.length === 0 ? (
+            <div className='text-xl mb-2'>You don't have any token.</div>
+          ) : (
+            userNFTs.map(({ tokenId, image }) => (
+              <NFTRedeemCard
+                key={tokenId}
+                tokenId={tokenId}
+                openRedeem={openRedeem}
+                imgSrc={image}
+              />
+            ))
+          )}
+        </UserTokenContainer>
       </div>
 
       <div className='mb-4'>
