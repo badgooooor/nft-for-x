@@ -96,7 +96,6 @@ export default function OptionModal({
                       setSelectedItem(null);
                     }}
                   >
-                    {' '}
                     Cancel
                   </button>
                   {isTokenApproved ? (
